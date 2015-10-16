@@ -5,8 +5,8 @@ function makeShip(){
 	return ship = {
 
 		// Variables
-		posX: 0,
-		posY : 0,
+		posX: canvas.width/2,
+		posY : canvas.height/2,
 		width : 15,
 		height : 20,
 		velocity : {
@@ -17,7 +17,7 @@ function makeShip(){
 		speed : 1,
 
 		// Static Variables
-		MAX_SPEED : 10,
+		MAX_SPEED : 5,
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
@@ -71,10 +71,14 @@ function makeShip(){
 			} else {
 				this.posX += this.velocity.x;
 			}
-			
-
 		},
 
+		// shipPause
+		// * stops moving the ship
+		shipPause: function(){
+			this.velocity.x = 0;
+			this.velocity.y = 0;
+		},
 
 
 		// calcVelocity 

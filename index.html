@@ -16,10 +16,21 @@
 			var canvas,ctx;
 			var ship;
 			var collectibles = [];
+			var timer;
+			var score;
+
+			// gameState should have 4 settings
+			// title: for the title screen
+			// play: for the main game
+			// pause: for paused game
+			// highscore: for the highscore screen
+			var gameState;
 
 			// Static Variables
 			var CANVAS_HEIGHT = 600;
 			var CANVAS_WIDTH = 600;
+			var START_TIME = 15;
+			var START_SCORE = 0;
 
 
 			// init
@@ -38,28 +49,62 @@
 				// ship, collectibles
 				ship = makeShip();
 
-				//set up the UI and start the update loop
-				setupUI();
-				update();
-			}
+				// set gameState
+				gameState = "title";
 
-			// setupUI
-			// * Use this to draw the UI 
-			function setupUI(){
 				// set the canvas height and width
 				canvas.height = CANVAS_HEIGHT;
 				canvas.width = CANVAS_WIDTH;
+
+				// set the start values
+				timer = START_TIME;
+				score = START_SCORE;
+
+				// star the update loop
+				update();
 			}
 
 			// onkeydown
 			// parameters: e
 			// * activates when a key is pressed down.
 			function onkeydown(e){
+				console.log("keydown");
 				// use keycodes from the events to 
-				if (e.keyCode == '37'){ship.moveLeft();};
-				if (e.keyCode == '39'){ship.moveRight();};
-				if (e.keyCode == '38'){ship.moveUp();};
-				if (e.keyCode == '40'){ship.moveDown();};
+				
+				// this is the events for the arrows
+				if (e.which == '37'){ship.moveLeft();}
+				else if (e.which == '39'){ship.moveRight();}
+				else if (e.which == '38'){ship.moveUp();}
+				else if (e.which == '40'){ship.moveDown();};
+				
+				// this is for "wasd"
+				if (e.which == '65'){ship.moveLeft();}
+				else if (e.which == '68'){ship.moveRight();}
+				else if (e.which == '87'){ship.moveUp();}
+				else if (e.which == '83'){ship.moveDown();};
+
+				// this is for the space bar
+				if (e.which == '32'){
+					if (gameState == "title" || gameState == "highscore"){
+						gameState = "play";
+					} else {
+						// a cheat to add time for now
+						timer++;
+					}
+				}//  end SPACE if statement
+
+				// only pause the game if it is playing!
+				// this is for P
+				if(e.which == '80'){
+					if (gameState == "play"){
+						gameState = "pause";
+					} else if (gameState == "pause"){
+						gameState = "play";
+					}
+					
+				} // end P if statement
+
+
 			}
 
 			// drawShip
@@ -77,17 +122,153 @@
 				ctx.restore();
 			}
 
+			// drawUI
+			// * draw the score and time remaining.
+			// * gets called every animation frame
+			function drawUI(){
+				
+				// if the game is on the title screen draw this
+				if (gameState == "title"){
+					// save current draw settings
+					ctx.save();
+
+					// set the font
+					ctx.font = "50px Arial";
+					ctx.fillStyle = "white";
+
+					// actually draw the text
+					ctx.fillText("TIME CHASERS", 50, CANVAS_HEIGHT/2);
+
+					ctx.font = "20px Arial"
+					ctx.fillText("Press SPACE to start", 50, CANVAS_HEIGHT/2 + 50);
+
+					//restore the draw settings
+					ctx.restore();
+				}
+
+				// if the game is currently "play"ing draw this
+				else if (gameState == "play"){
+					// save current draw settings
+					ctx.save();
+					// set the font
+					ctx.font = "20px Arial";
+					ctx.fillStyle = "white";
+
+					// actually draw the text
+					ctx.fillText("Score: " + score, 10, 30);
+					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
+
+					//restore the draw settings
+					ctx.restore();
+				} 
+
+				// if you are on the highscore screen draw this
+				else if (gameState == "highscore") {
+					// save current draw settings
+					ctx.save();
+					// set the font
+					ctx.font = "50px Arial";
+					ctx.fillStyle = "white";
+
+					// actually draw the text
+					ctx.fillText("Time is Up!", CANVAS_WIDTH/2, 200);
+
+					ctx.font = "20px Arial"
+					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
+
+					//restore the draw settings
+					ctx.restore();
+				}
+
+				// if paused draw this 
+				else if (gameState == "pause") {
+
+					// save current draw settings
+					ctx.save();
+
+					// set the font
+					ctx.font = "20px Arial";
+					ctx.fillStyle = "white";
+
+					// actually draw the text
+					ctx.fillText("Score: " + score, 10, 30);
+					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
+
+					ctx.globalAlpha = 0.2;
+					ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
+					ctx.globalAlpha = 1;
+
+					// set the font
+					ctx.font = "50px Arial";
+					ctx.fillStyle = "white";
+
+					// actually draw the text
+					ctx.fillText(">> PAUSE <<", CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+
+					ctx.font = "20px Arial"
+					ctx.fillText("Press P to resume", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
+
+					//restore the draw settings
+					ctx.restore();
+
+				}
+			
+			}
+
 			// Update
 			// * calls the request animation frame
 			// * causing the things within to repeat every 1/60th of a second
 			function update(){
+
 				// this schedules a call to the update() method in 1/60 seconds
 				requestAnimationFrame(update);
 
+				// redraws the background, a page clear.
 				ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
 
-				ship.move();
-				drawShip();
+				// if the timer runs out, go to the highscore screen
+				if (timer <= 0) {
+					gameState = "highscore"
+					timer = START_TIME;
+				};
+
+
+				// if the gamestate is the title screen
+				if (gameState == "title") {
+
+					// draw the title UI
+					drawUI();
+
+				} else if( gameState == "play"){
+					
+					//move the ship, then draw it
+					ship.move();
+					drawShip();
+
+					// Calculate the time, then draw the UI
+					timer -= (1/60);
+					drawUI();
+
+					window.onblur = function(){
+						gameState = "pause";
+					}
+
+				} else if (gameState == "highscore"){
+					
+					// ADD CODE TO SAVE THE HIGHSCORE HERE
+
+					drawUI();
+				} else if (gameState == "pause"){
+
+					ship.shipPause();
+					drawShip();
+					drawUI();
+
+					window.onfocus = function(){
+						gameState = "play";
+					}
+					
+				} // end if chain
 			}
 
 		}());
