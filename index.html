@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head> 
+		<script src="script/ship.js" type="text/javascript"></script>
+	</head>
+	<body>
+
+	<canvas id="canvas">Get a Real Browser Nerd!</canvas>
+
+	<script>
+		(function(){
+			// keep me syntactically in line
+			"use strict";
+			
+			// Variables
+			var canvas,ctx;
+			var ship;
+			var collectibles = [];
+
+			// Static Variables
+			var CANVAS_HEIGHT = 600;
+			var CANVAS_WIDTH = 600;
+
+
+			// init
+			// * called when the page loads to set up stuff
+			window.onload = function init(){
+				// get the canvas from the document
+				// get the context for the canvas
+				canvas = document.querySelector("#canvas");
+				ctx = canvas.getContext("2d");
+
+				// use event listeners attached to the window to call the 
+				// onkeydown function
+				window.addEventListener("keydown", onkeydown);
+
+				// create the stuff needed for the game
+				// ship, collectibles
+				ship = makeShip();
+
+				//set up the UI and start the update loop
+				setupUI();
+				update();
+			}
+
+			// setupUI
+			// * Use this to draw the UI 
+			function setupUI(){
+				// set the canvas height and width
+				canvas.height = CANVAS_HEIGHT;
+				canvas.width = CANVAS_WIDTH;
+			}
+
+			// onkeydown
+			// parameters: e
+			// * activates when a key is pressed down.
+			function onkeydown(e){
+				// use keycodes from the events to 
+				if (e.keyCode == '37'){ship.moveLeft();};
+				if (e.keyCode == '39'){ship.moveRight();};
+				if (e.keyCode == '38'){ship.moveUp();};
+				if (e.keyCode == '40'){ship.moveDown();};
+			}
+
+			// drawShip
+			// * for now just draw a tiny circle that will
+			// * be a place holder for the ship
+			// * PLANNED
+			// * import graphics for the ship and place it 
+			// * in the appropriate position
+			function drawShip(){
+				ctx.save();
+				ctx.fillStyle = "blue";
+				ctx.beginPath();
+				ctx.arc(ship.posX,ship.posY,10,0,2*Math.PI);
+				ctx.fill();
+				ctx.restore();
+			}
+
+			// Update
+			// * calls the request animation frame
+			// * causing the things within to repeat every 1/60th of a second
+			function update(){
+				// this schedules a call to the update() method in 1/60 seconds
+				requestAnimationFrame(update);
+
+				ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
+
+				ship.move();
+				drawShip();
+			}
+
+		}());
+	</script>
+
+	</body>
+</html>
