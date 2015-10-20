@@ -7,17 +7,17 @@ function makeShip(){
 		// Variables
 		posX: canvas.width/2,
 		posY : canvas.height/2,
-		width : 15,
-		height : 20,
+		size: 15,
 		velocity : {
 			x: 0,
 			y: 0,
 		},
 		rotation: 0,
-		speed : 1,
+		speed : 3,
+		friction: .02,
 
 		// Static Variables
-		MAX_SPEED : 5,
+		MAX_SPEED : 8,
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
@@ -25,12 +25,12 @@ function makeShip(){
 		// moveLeft
 		// * rotate to the left
 		moveLeft: function(){
-			this.rotation -= Math.PI/10;
+			this.rotation -= Math.PI/32;
 		},
 		// moveRight
 		// * roate to the right
 		moveRight: function(){
-			this.rotation += Math.PI/10;
+			this.rotation += Math.PI/32;
 		},
 		// moveUp
 		// * accelerate
@@ -80,6 +80,35 @@ function makeShip(){
 			this.velocity.y = 0;
 		},
 
+		// shipReset
+		// * reset the ships values to their defaults
+		shipReset: function(){
+			this.velocity.x = 0;
+			this.velocity.y = 0;
+			this.speed = 3;
+			ship.posX = this.DEFAULTX;
+			ship.posY = this.DEFAULTY;
+
+		},
+
+		// drawShip
+		// * for now just draw a tiny circle that will
+		// * be a place holder for the ship
+		// * PLANNED
+		// * import graphics for the ship and place it 
+		// * in the appropriate position
+		drawShip: function(_ctx){
+			var ctx = _ctx;
+			ctx.save();
+			ctx.fillStyle = "blue";
+			ctx.beginPath();
+			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+			ctx.closePath();
+			ctx.fill();
+			ctx.restore();
+		},
+
+
 
 		// calcVelocity 
 		// * calculates the x and y of the velocity
@@ -88,6 +117,7 @@ function makeShip(){
 		// * The cos of the angle times the magnitude of the hypotenuse
 		// * for the x value.
 		calcVelocity: function(){
+			//if (this.speed > this.MIN_SPEED);
 			this.velocity.y = Math.sin(this.rotation) * this.speed;
 			this.velocity.x = Math.cos(this.rotation) * this.speed;
 		},
