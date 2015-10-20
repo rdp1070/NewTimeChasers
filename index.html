@@ -4,6 +4,8 @@
 		<script src="script/ship.js" type="text/javascript"></script>
 		<script src="script/gem.js" type="text/javascript"></script>
 		<script src="script/tear.js" type="text/javascript"></script>
+		<script src="script/seal.js" type="text/javascript"></script>
+
 	</head>
 	<body>
 
@@ -166,6 +168,9 @@
 				gameState = "highscore"
 				timer = START_TIME;
 				score = START_SCORE;
+				for (var x= collectibles.length; x > 0; x--){
+					collectibles.pop();
+				}
 				collectibles = [];
 			}
 
@@ -250,10 +255,10 @@
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText(">> PAUSE <<", CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+					ctx.fillText(">> PAUSE <<", 80, CANVAS_HEIGHT/2);
 
 					ctx.font = "20px Arial"
-					ctx.fillText("Press P to resume", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
+					ctx.fillText("Press P to resume", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
@@ -300,6 +305,8 @@
 					if (collectibles.length < MIN_COLLECTIBLES){
 						var newGem = makeGem();
 						collectibles.push(newGem);
+						var newSeal = makeSeal();
+						collectibles.push(newSeal);
 					}
 
 					// check the score, and create more obstacles as it gets higher.

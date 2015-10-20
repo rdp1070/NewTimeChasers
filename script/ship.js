@@ -100,7 +100,7 @@ function makeShip(){
 		drawShip: function(_ctx){
 			var ctx = _ctx;
 			ctx.save();
-			ctx.fillStyle = "blue";
+			ctx.fillStyle = "aqua";
 			ctx.beginPath();
 			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
 			ctx.closePath();

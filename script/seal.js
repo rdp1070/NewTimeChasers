@@ -1,8 +1,8 @@
 "use strict"
 
-function makeGem(){
-	var gem;
-	return gem = {
+function makeSeal(){
+	var seal;
+	return seal = {
 
 		// Variables
 		posX: Math.random() *(canvas.width - 10) + 10,
@@ -22,23 +22,22 @@ function makeGem(){
 		DEFAULTY : canvas.height/2,
 
 		// drawShip
-		// * for now just draw a tiny green square that will
-		// * be a place holder for the gem
+		// * for now just draw a tiny red circle that will
+		// * be a place holder for the seal
 		// * PLANNED
-		// * import graphics for the gem and place it 
+		// * import graphics for the seal and place it 
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
 			ctx.save();
-			ctx.fillStyle = "green";
+			ctx.fillStyle = "blue";
 			ctx.beginPath();
-			// temporary drawing of a green circle to represent the gem
+			// temporary drawing of a red circle to represent the seal
 			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
 			ctx.fill();
 			ctx.closePath();
 			ctx.restore();
 		},
-
 
 		// collected
 		// * randomize the location of collected thing
@@ -46,14 +45,14 @@ function makeGem(){
 		collected: function(){
 
 			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 40) + 40;
+			this.posY =  Math.random() *(canvas.height - 10) + 10;
 
-			return { score: 100, timer: 0};
+			return { score: 0, timer: 5};
 		},
 
 		// move
-		// * move the gem somehow
-		move: function(){
+		// * move towards the ship
+		move: function(shipX, shipY){
 			return null;
 		},
 
