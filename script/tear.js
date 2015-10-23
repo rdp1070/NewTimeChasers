@@ -13,11 +13,12 @@ function makeTear(){
 			y: 0,
 		},
 		rotation: 0,
-		speed : 2,
-		top_speed: 1,
+		top_speed: 3,
+		// can't get top speed to work in this speed calculation
+		speed : Math.random() *(3 - 0.1) + 0.1,
 
 		// Static Variables
-		MAX_SPEED : 6,
+		MAX_SPEED : 3,
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
@@ -47,7 +48,7 @@ function makeTear(){
 
 			this.posX = Math.random() *(canvas.width - 10) + 10;
 			this.posY =  Math.random() *(canvas.height - 10) + 10;
-			//this.speed = Math.random() * (this.top_speed - 1 ) + 1;
+			
 			return { score: 0, timer: -3};
 		},
 
