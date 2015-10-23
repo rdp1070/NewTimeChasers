@@ -14,6 +14,7 @@ function makeSeal(){
 		},
 		rotation: 0,
 		speed : 0,
+		top_speed : 0,
 
 		// Static Variables
 		MAX_SPEED : 5,
@@ -48,6 +49,13 @@ function makeSeal(){
 			this.posY =  Math.random() *(canvas.height - 10) + 10;
 
 			return { score: 0, timer: 5};
+		},
+
+		// randomize
+		// * move to a random location
+		randomize: function(){
+			this.posX = Math.random() *(canvas.width - 10) + 10;
+			this.posY =  Math.random() *(canvas.height - 40) + 40;
 		},
 
 		// move

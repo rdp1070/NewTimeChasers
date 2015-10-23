@@ -14,6 +14,7 @@ function makeGem(){
 		},
 		rotation: 0,
 		speed : 0,
+		top_speed : 0,
 
 		// Static Variables
 		MAX_SPEED : 5,
@@ -51,9 +52,16 @@ function makeGem(){
 			return { score: 100, timer: 0};
 		},
 
+		// randomize
+		// * move to a random location
+		randomize: function(){
+			this.posX = Math.random() *(canvas.width - 10) + 10;
+			this.posY =  Math.random() *(canvas.height - 40) + 40;
+		},
+
 		// move
 		// * move the gem somehow
-		move: function(){
+		move: function(shipX, shipY){
 			return null;
 		},
 

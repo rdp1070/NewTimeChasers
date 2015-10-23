@@ -103,6 +103,7 @@
 						gameState = "play";
 					} else {
 						// a cheat to add time for now
+						score+= 100;
 						timer++;
 					}
 				}//  end SPACE if statement
@@ -311,7 +312,7 @@
 
 					// check the score, and create more obstacles as it gets higher.
 
-					num_collectibles = (score/500 + 3);
+					num_collectibles = (score/250 + 3);
 					if (num_collectibles > MAX_COLLECTIBLES){
 						num_collectibles = MAX_COLLECTIBLES;
 					}
@@ -320,7 +321,7 @@
 							var newGem = makeGem();
 							collectibles.push(newGem);
 						} 
-						if (score % 500 == 0){
+						if (score % 250 == 0){
 							var newTear = makeTear();
 							collectibles.push(newTear);
 						}
@@ -332,9 +333,11 @@
 					
 					// draw the stuff
 					for (var i=0; i< collectibles.length; i++){
-						if (score > 5000){
-						// 	collectibles[i].move();
+						if (score > 2000){
+							collectibles[i].move(ship.posX, ship.posY);
+							//collectibles[i].top_speed = this.score / 2000;
 						}
+
 						collectibles[i].draw(ctx);
 					}
 					drawUI();

@@ -13,10 +13,11 @@ function makeTear(){
 			y: 0,
 		},
 		rotation: 0,
-		speed : 0,
+		speed : 2,
+		top_speed: 1,
 
 		// Static Variables
-		MAX_SPEED : 5,
+		MAX_SPEED : 6,
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
@@ -46,16 +47,81 @@ function makeTear(){
 
 			this.posX = Math.random() *(canvas.width - 10) + 10;
 			this.posY =  Math.random() *(canvas.height - 10) + 10;
-
+			//this.speed = Math.random() * (this.top_speed - 1 ) + 1;
 			return { score: 0, timer: -3};
+		},
+
+		// randomize
+		// * move to a random location
+		randomize: function(){
+			this.posX = Math.random() *(canvas.width - 10) + 10;
+			this.posY =  Math.random() *(canvas.height - 40) + 40;
 		},
 
 		// move
 		// * move towards the ship
 		move: function(shipX, shipY){
-			this.posX -= shipX;
-			this.posY -= shipY;
+
+			this.calcVelocity(shipX, shipY);
+			// if the position exceeds height of screen
+			// warp the ship to the other side
+			// otherwise just add the y velocity
+			if(this.posY > canvas.height){
+				this.posY = 0;
+			} else if(this.posY < 0){
+				this.posY = canvas.height;
+			} else {
+				this.posY += this.velocity.y;
+			}
+			
+			// if the position exceeds width of screen
+			// warp the ship to the other side
+			// otherwise just add the x velocity
+			if (this.posX > canvas.width){
+				this.posX = 0;
+			} else if( this.posX < 0) {
+				this.posX = canvas.width;
+			} else {
+				this.posX += this.velocity.x;
+			}
+
+
 		},
+
+		calcVelocity: function(shipX, shipY){
+
+			// The velocity of each tear should pont it in the direction
+			// of the ship's current location. And it should head towards it
+			// at the set speed. 
+
+			// get the x distance
+			var a = shipX - this.posX;
+			// get the y distance
+			var o = shipY - this.posY;
+
+			// pythagoreans thing to get actual distance
+			var h = Math.sqrt( o*o + a*a);
+
+			// convert o/h to radians so you can get the deg
+			var sin = o/h;
+
+			// sin = opposite/hypotenuse
+			// asin of sin is the angle
+			// asin returns in radians
+			var deg = Math.asin(sin);
+			// convert deg back to radians from degrees
+		
+			this.velocity.x = this.speed * Math.cos(deg);
+			this.velocity.y = this.speed * Math.sin(deg);
+
+			if (shipX < this.posX){
+				this.velocity.x *= -1;
+			}
+			/*if (shipY < this.posY){
+				this.velocity.y *= -1;	
+			} */
+			
+		}
 
 	}
 }; 
