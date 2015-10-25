@@ -15,7 +15,7 @@ function makeTear(){
 		rotation: 0,
 		top_speed: 3,
 		// can't get top speed to work in this speed calculation
-		speed : Math.random() *(3 - 0.1) + 0.1,
+		speed : Math.random() *(5 - 0.1) + 0.1,
 
 		// Static Variables
 		MAX_SPEED : 3,
@@ -63,7 +63,9 @@ function makeTear(){
 		// * move towards the ship
 		move: function(shipX, shipY){
 
-			this.calcVelocity(shipX, shipY);
+			//this.calcVelocity(shipX, shipY);
+
+
 			// if the position exceeds height of screen
 			// warp the ship to the other side
 			// otherwise just add the y velocity
@@ -85,7 +87,6 @@ function makeTear(){
 			} else {
 				this.posX += this.velocity.x;
 			}
-
 
 		},
 

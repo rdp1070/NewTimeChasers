@@ -106,6 +106,17 @@ function makeShip(){
 			ctx.closePath();
 			ctx.fill();
 			ctx.restore();
+
+			// Debug line for direction
+			ctx.save();
+			ctx.strokeStyle = "white";
+			ctx.beginPath();
+			ctx.moveTo(this.posX, this.posY);
+			ctx.lineTo(this.posX + (50 * Math.cos(this.rotation)),this.posY + (50 * Math.sin(this.rotation)));
+			ctx.stroke();
+			ctx.closePath();
+			ctx.restore();
+			// end debug line
 		},
 
 

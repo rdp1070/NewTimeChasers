@@ -82,7 +82,7 @@
 			// parameters: e
 			// * activates when a key is pressed down.
 			function onkeydown(e){
-				console.log("keydown");
+				//console.log("keydown");
 				// use keycodes from the events to 
 				
 				// this is the events for the arrows
@@ -125,7 +125,7 @@
 			// parameters: e
 			// * activates when a key is released.
 			function onkeyup(e){
-				console.log("key up");
+				//console.log("key up");
 				// this is the events for the arrows
 				if (e.which == '37'){pressLeft = false;}
 				else if (e.which == '39'){pressRight = false;}
@@ -335,9 +335,7 @@
 					for (var i=0; i< collectibles.length; i++){
 						if (score > 2000){
 							collectibles[i].move(ship.posX, ship.posY);
-							//collectibles[i].top_speed = this.score / 2000;
 						}
-
 						collectibles[i].draw(ctx);
 					}
 					drawUI();
