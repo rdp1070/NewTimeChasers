@@ -15,7 +15,7 @@ function makeTear(){
 		rotation: 0,
 		top_speed: 3,
 		// can't get top speed to work in this speed calculation
-		speed : Math.random() *(5 - 0.1) + 0.1,
+		speed : Math.random() *(5) - 2.5,
 
 		// Static Variables
 		MAX_SPEED : 3,
@@ -40,17 +40,6 @@ function makeTear(){
 			ctx.fill();
 			ctx.closePath();
 			ctx.restore();
-
-			// Debug line for direction
-			ctx.save();
-			ctx.strokeStyle = "white";
-			ctx.beginPath();
-			ctx.moveTo(this.posX, this.posY);
-			ctx.lineTo(this.posX + (50 * Math.cos(this.rotation)),this.posY + (50 * Math.sin(this.rotation)));
-			ctx.stroke();
-			ctx.closePath();
-			ctx.restore();
-			// end debug line
 
 		},
 
@@ -78,7 +67,6 @@ function makeTear(){
 
 			this.calcVelocity(shipX, shipY);
 
-
 			// if the position exceeds height of screen
 			// warp the ship to the other side
 			// otherwise just add the y velocity
@@ -105,36 +93,10 @@ function makeTear(){
 
 		calcVelocity: function(shipX, shipY){
 
-			// The velocity of each tear should pont it in the direction
-			// of the ship's current location. And it should head towards it
-			// at the set speed. 
+			// Go in a straight line left or right 
 
-			// get the x distance
-			var a = shipX - this.posX;
-			// get the y distance
-			var o = shipY - this.posY;
+			this.velocity.x = this.speed;
 
-			// pythagoreans thing to get actual distance
-			var h = Math.sqrt( o*o + a*a);
-
-			// convert o/h to radians so you can get the deg
-			var sin = o/h;
-
-			// sin = opposite/hypotenuse
-			// asin of sin is the angle
-			// asin returns in radians
-			var deg = Math.asin(sin);
-			// convert deg back to radians from degrees
-		
-			this.velocity.x = this.speed * Math.cos(deg);
-			this.velocity.y = this.speed * Math.sin(deg);
-
-			if (shipX < this.posX){
-				this.velocity.x *= -1;
-			}
-			/*if (shipY < this.posY){
-				this.velocity.y *= -1;	
-			} */
 			
 		}
 

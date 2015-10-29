@@ -340,15 +340,17 @@
 					// Do different behaviors if the score is over certain 
 					// thresholds, refered to as "Score_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
-						if (score > SCORE_THRESHOLD1){
+						if ( score >= SCORE_THRESHOLD1){
 							if (collectibles[i].TYPE == "seal"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
-						} else if (score > SCORE_THRESHOLD2){
+						} 
+						if ( score >= SCORE_THRESHOLD2){
 							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
-						} else if ( score > SCORE_THRESHOLD3){
+						}
+						if ( score > SCORE_THRESHOLD3){
 							collectibles[i].move(ship.posX, ship.posY);
 						}
 						collectibles[i].draw(ctx);

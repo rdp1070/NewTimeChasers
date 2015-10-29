@@ -13,7 +13,7 @@ function makeSeal(){
 			y: 0,
 		},
 		rotation: 0,
-		speed : 2,
+		speed : 1.5,
 		top_speed : 5,
 		chase_range : 200 ,
 
