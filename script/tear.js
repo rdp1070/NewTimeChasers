@@ -22,6 +22,7 @@ function makeTear(){
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
+		TYPE : "tear",
 
 		// drawShip
 		// * for now just draw a tiny red circle that will
@@ -39,6 +40,18 @@ function makeTear(){
 			ctx.fill();
 			ctx.closePath();
 			ctx.restore();
+
+			// Debug line for direction
+			ctx.save();
+			ctx.strokeStyle = "white";
+			ctx.beginPath();
+			ctx.moveTo(this.posX, this.posY);
+			ctx.lineTo(this.posX + (50 * Math.cos(this.rotation)),this.posY + (50 * Math.sin(this.rotation)));
+			ctx.stroke();
+			ctx.closePath();
+			ctx.restore();
+			// end debug line
+
 		},
 
 		// collected
@@ -63,7 +76,7 @@ function makeTear(){
 		// * move towards the ship
 		move: function(shipX, shipY){
 
-			//this.calcVelocity(shipX, shipY);
+			this.calcVelocity(shipX, shipY);
 
 
 			// if the position exceeds height of screen

@@ -22,6 +22,7 @@ function makeSeal(){
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
+		TYPE : "seal",
 
 		// drawShip
 		// * for now just draw a tiny red circle that will

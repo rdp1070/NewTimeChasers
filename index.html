@@ -44,6 +44,12 @@
 			var START_SCORE = 0;
 			var MIN_COLLECTIBLES = 3;
 			var MAX_COLLECTIBLES = 14;
+			
+			// Static Score Thresholds
+			var SCORE_THRESHOLD1 = 1500;
+			var SCORE_THRESHOLD2 = 3000;
+			var SCORE_THRESHOLD3 = 4500;
+
 
 
 			// init
@@ -331,13 +337,26 @@
 					// Calculate the time, then draw the UI
 					timer -= (1/60);
 					
-					// draw the stuff
+					// Do different behaviors if the score is over certain 
+					// thresholds, refered to as "Score_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
-						if (score > 2000){
+						if (score > SCORE_THRESHOLD1){
+							if (collectibles[i].TYPE == "seal"){
+								collectibles[i].move(ship.posX, ship.posY);
+							}
+						} else if (score > SCORE_THRESHOLD2){
+							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
+								collectibles[i].move(ship.posX, ship.posY);
+							}
+						} else if ( score > SCORE_THRESHOLD3){
 							collectibles[i].move(ship.posX, ship.posY);
 						}
 						collectibles[i].draw(ctx);
 					}
+
+
+
+					// Draw the UI 
 					drawUI();
 					
 

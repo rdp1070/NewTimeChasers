@@ -21,6 +21,7 @@ function makeGem(){
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
+		TYPE : "gem",
 
 		// drawShip
 		// * for now just draw a tiny green square that will
