@@ -342,7 +342,9 @@
 					
 
 					window.onblur = function(){
-						gameState = "pause";
+						if (gameState == "play"){
+							gameState = "pause";
+						}
 					} 
 
 					checkCollision();
