@@ -198,8 +198,16 @@
 					// actually draw the text
 					ctx.fillText("TIME CHASERS", 50, CANVAS_HEIGHT/2);
 
+					ctx.font = "20px Arial";
+					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2 + 50);
+
+					ctx.font = "12px Arial";
+					ctx.fillText("Up/A speed up, Down/S slow down", 50, CANVAS_HEIGHT/2 + 65);
+					ctx.fillText("Left Right/A D turn left and right", 50, CANVAS_HEIGHT/2 + 80);
+					ctx.fillText("BLUE orbs ADDS, RED SUBTRACTS, GREEN are POINTS", 50, CANVAS_HEIGHT/2 + 95);
+
 					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to start", 50, CANVAS_HEIGHT/2 + 50);
+					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
