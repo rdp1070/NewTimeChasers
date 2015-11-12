@@ -59,8 +59,8 @@ function makeSeal(){
 		// * return the score and time changes 
 		collected: function(){
 
-			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 10) + 10;
+			this.posX = Math.random() *((canvas.width - 200) - 50) + 50;
+			this.posY =  Math.random() *((canvas.height - 200) - 50) + 50;
 
 			return { score: 0, timer: 5};
 		},
@@ -68,8 +68,8 @@ function makeSeal(){
 		// randomize
 		// * move to a random location
 		randomize: function(){
-			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 40) + 40;
+			this.posX = Math.random() *((canvas.width - 200) - 50) + 50;
+			this.posY =  Math.random() *((canvas.height - 200) - 50) + 50;
 		},
 
 		// move

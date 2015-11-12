@@ -35,12 +35,26 @@ function makeShip(){
 		// moveUp
 		// * accelerate
 		moveUp: function(){
-			if (this.speed < this.MAX_SPEED)   this.speed+= .5;
+			if (this.speed < this.MAX_SPEED){
+				if (this.speed < this.MAX_SPEED/2){
+					this.speed+= .5;
+				}
+				else {
+					this.speed += .1;
+				}
+			}
 		},
 		// moveDown
 		//* decelerate
 		moveDown: function(){
-			if (this.speed > this.MIN_SPEED)   this.speed-= .5;
+			if (this.speed > this.MIN_SPEED){
+				if (this.speed > this.MAX_SPEED/2){
+					this.speed-= .5;
+				}
+				else {
+					this.speed -= .1;
+				}
+			}
 		},
 
 		// move

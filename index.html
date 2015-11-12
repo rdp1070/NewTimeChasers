@@ -21,6 +21,7 @@
 			var ship;
 			var collectibles = [];
 			var timer;
+			var elapsed_time;
 			var score;
 			var num_collectibles = 5;
 
@@ -50,6 +51,10 @@
 			var SCORE_THRESHOLD2 = 3000;
 			var SCORE_THRESHOLD3 = 4500;
 
+			// Static Time Thresholds
+			var TIME_THRESHOLD1 = 45;
+			var TIME_THRESHOLD2 = 60;
+			var TIME_THRESHOLD3 = 120;
 
 
 			// init
@@ -78,6 +83,7 @@
 
 				// set the start values
 				timer = START_TIME;
+				elapsed_time = 0;
 				score = START_SCORE;
 
 				// star the update loop
@@ -107,10 +113,11 @@
 				if (e.which == '32'){
 					if (gameState == "title" || gameState == "highscore"){
 						gameState = "play";
+						score = START_SCORE;
 					} else {
 						// a cheat to add time for now
-						score+= 100;
-						timer++;
+						//score+= 100;
+						//timer++;
 					}
 				}//  end SPACE if statement
 
@@ -174,7 +181,7 @@
 			function gameEnd(){
 				gameState = "highscore"
 				timer = START_TIME;
-				score = START_SCORE;
+				
 				for (var x= collectibles.length; x > 0; x--){
 					collectibles.pop();
 				}
@@ -238,7 +245,8 @@
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText("Time is Up!", CANVAS_WIDTH/2, 200);
+					ctx.fillText("Time is Up!", CANVAS_WIDTH/2 - 100, 200);
+					ctx.fillText("Score:" + score, CANVAS_WIDTH/2 - 100, 250);
 
 					ctx.font = "20px Arial"
 					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
@@ -325,7 +333,6 @@
 					}
 
 					// check the score, and create more obstacles as it gets higher.
-
 					num_collectibles = (score/250 + 3);
 					if (num_collectibles > MAX_COLLECTIBLES){
 						num_collectibles = MAX_COLLECTIBLES;
@@ -344,21 +351,22 @@
 
 					// Calculate the time, then draw the UI
 					timer -= (1/60);
+					elapsed_time += (1/60);
 					
 					// Do different behaviors if the score is over certain 
 					// thresholds, refered to as "Score_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
-						if ( score >= SCORE_THRESHOLD1){
+						if ( score >= SCORE_THRESHOLD1 || timer > 60 || elapsed_time > TIME_THRESHOLD1){
 							if (collectibles[i].TYPE == "seal"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						} 
-						if ( score >= SCORE_THRESHOLD2){
+						if ( score >= SCORE_THRESHOLD2 || timer > 80 || elapsed_time > TIME_THRESHOLD2){
 							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						}
-						if ( score > SCORE_THRESHOLD3){
+						if ( score > SCORE_THRESHOLD3 || elapsed_time > TIME_THRESHOLD3){
 							collectibles[i].move(ship.posX, ship.posY);
 						}
 						collectibles[i].draw(ctx);
@@ -371,7 +379,9 @@
 					
 
 					window.onblur = function(){
-						gameState = "pause";
+						if (gameState == "play"){
+							gameState = "pause";
+						}
 					} 
 
 					checkCollision();
@@ -394,9 +404,7 @@
 					ship.drawShip(ctx);
 					drawUI();
 
-					window.onfocus = function(){
-						gameState = "play";
-					}
+					
 					
 				} // end if chain
 			}
