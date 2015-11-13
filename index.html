@@ -181,6 +181,7 @@
 			function gameEnd(){
 				gameState = "highscore"
 				timer = START_TIME;
+				elapsed_time = 0;
 				
 				for (var x= collectibles.length; x > 0; x--){
 					collectibles.pop();
@@ -231,6 +232,8 @@
 					// actually draw the text
 					ctx.fillText("Score: " + score, 10, 30);
 					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
+					ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
+
 
 					//restore the draw settings
 					ctx.restore();
@@ -332,8 +335,10 @@
 						collectibles.push(newSeal);
 					}
 
-					// check the score, and create more obstacles as it gets higher.
-					num_collectibles = (score/250 + 3);
+					// check the score, and create more obstacles as it gets higher. If the time/20 is a higher number, use that number for collectibles instead.
+					if (num_collectibles < MAX_COLLECTIBLES){ 
+						num_collectibles = Math.max((score/250 + 3) , (elapsed_time/10 + 3) );
+					}
 					if (num_collectibles > MAX_COLLECTIBLES){
 						num_collectibles = MAX_COLLECTIBLES;
 					}
