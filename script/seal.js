@@ -35,7 +35,7 @@ function makeSeal(){
 			ctx.save();
 			ctx.fillStyle = "blue";
 			ctx.beginPath();
-			// temporary drawing of a red circle to represent the seal
+			// temporary drawing of a blue circle to represent the seal
 			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
 			ctx.fill();
 			ctx.closePath();

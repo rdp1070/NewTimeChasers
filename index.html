@@ -5,417 +5,55 @@
 		<script src="script/gem.js" type="text/javascript"></script>
 		<script src="script/tear.js" type="text/javascript"></script>
 		<script src="script/seal.js" type="text/javascript"></script>
-
+		<script src="script/main.js" type="text/javascript"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700|Crete+Round' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" type="text/css" href="../css/portfolio.css"
 	</head>
-	<body>
 
-	<canvas id="canvas">Get a Real Browser Nerd!</canvas>
+	<title>Time Chasers</title>
 
-	<script>
-		(function(){
-			// keep me syntactically in line
-			"use strict";
-			
-			// Variables
-			var canvas,ctx;
-			var ship;
-			var collectibles = [];
-			var timer;
-			var elapsed_time;
-			var score;
-			var num_collectibles = 5;
-
-			// gameState should have 4 settings
-			// title: for the title screen
-			// play: for the main game
-			// pause: for paused game
-			// highscore: for the highscore screen
-			var gameState;
-
-			// Moving variables
-			var pressLeft = false;
-			var pressRight = false;
-			var pressUp = false;
-			var pressDown = false;
-
-			// Static Variables
-			var CANVAS_HEIGHT = 600;
-			var CANVAS_WIDTH = 600;
-			var START_TIME = 15;
-			var START_SCORE = 0;
-			var MIN_COLLECTIBLES = 3;
-			var MAX_COLLECTIBLES = 14;
-			
-			// Static Score Thresholds
-			var SCORE_THRESHOLD1 = 1500;
-			var SCORE_THRESHOLD2 = 3000;
-			var SCORE_THRESHOLD3 = 4500;
-
-			// Static Time Thresholds
-			var TIME_THRESHOLD1 = 45;
-			var TIME_THRESHOLD2 = 60;
-			var TIME_THRESHOLD3 = 120;
-
-
-			// init
-			// * called when the page loads to set up stuff
-			window.onload = function init(){
-				// get the canvas from the document
-				// get the context for the canvas
-				canvas = document.querySelector("#canvas");
-				ctx = canvas.getContext("2d");
-
-				// use event listeners attached to the window to call the 
-				// onkeydown function
-				window.addEventListener("keydown", onkeydown);
-				window.addEventListener("keyup", onkeyup);
-
-				// create the stuff needed for the game
-				// ship, collectibles
-				ship = makeShip();
-
-				// set gameState
-				gameState = "title";
-
-				// set the canvas height and width
-				canvas.height = CANVAS_HEIGHT;
-				canvas.width = CANVAS_WIDTH;
-
-				// set the start values
-				timer = START_TIME;
-				elapsed_time = 0;
-				score = START_SCORE;
-
-				// star the update loop
-				update();
-			}
-
-			// onkeydown
-			// parameters: e
-			// * activates when a key is pressed down.
-			function onkeydown(e){
-				//console.log("keydown");
-				// use keycodes from the events to 
+	<body style="overflow-x:hidden; max-width:3000px">
+		<nav>
+			<img src="../images/RB3.png" alt="A logo that looks like a butterfly made out of an R and a B." height="80" width="80" id="logo" >
+			<ul>
+				<a href="../index.html" style="text-decoration: none;"><li id="Main">Main</li></a>
+				<li id="game">Game</li>
+				<li id="text">Description</li>
+			</ul>
+		</nav>
+		<div class="content" >
+			<div class="game" style= "width: 600px; margin-right: 5%;">
+				<canvas id="canvas" style="padding-left: 150px;" >Get a Real Browser Nerd! (one with canvas)</canvas>
 				
-				// this is the events for the arrows
-				if (e.which == '37'){pressLeft = true;}
-				else if (e.which == '39'){pressRight = true;}
-				else if (e.which == '38'){pressUp = true;}
-				else if (e.which == '40'){pressDown = true;};
-				
-				// this is for "wasd"
-				if (e.which == '65'){ pressLeft = true}
-				else if (e.which == '68'){ pressRight = true}
-				else if (e.which == '87'){ pressUp = true}
-				else if (e.which == '83'){ pressDown = true};
+			</div>
+			<div class ="description"> 
+					<h1>Time Chasers </h1>
+					<p>
+					  It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. 
+					</p>
+			</div>
+		</div>
 
-				// this is for the space bar
-				if (e.which == '32'){
-					if (gameState == "title" || gameState == "highscore"){
-						gameState = "play";
-						score = START_SCORE;
-					} else {
-						// a cheat to add time for now
-						//score+= 100;
-						//timer++;
-					}
-				}//  end SPACE if statement
+		<script>
+		$(document).ready(function() {
+			$("#logo").click(function () {
+				$("body").animate({scrollLeft: 0}, 1000);
+			});
 
-				// only pause the game if it is playing!
-				// this is for P
-				if(e.which == '80'){
-					if (gameState == "play"){
-						gameState = "pause";
-					} else if (gameState == "pause"){
-						gameState = "play";
-					}
-					
-				} // end P if statement
-			}
+			$("#text").click(function () {
+				$("body").animate({
+					scrollLeft: $(".description").offset().left -200
+				}, 1000);
+			});
 
-
-			// onkeyup
-			// parameters: e
-			// * activates when a key is released.
-			function onkeyup(e){
-				//console.log("key up");
-				// this is the events for the arrows
-				if (e.which == '37'){pressLeft = false;}
-				else if (e.which == '39'){pressRight = false;}
-				else if (e.which == '38'){pressUp = false;}
-				else if (e.which == '40'){pressDown = false;};
-				
-				// this is for "wasd"
-				if (e.which == '65'){ pressLeft = false}
-				else if (e.which == '68'){ pressRight = false}
-				else if (e.which == '87'){ pressUp = false}
-				else if (e.which == '83'){ pressDown = false};
-			}
-
-			function checkCollision(){
-				for (var i = 0; i< collectibles.length; i++){
-					// complicated collision checking nonsense.
-					// get the x distance
-					var a = ship.posX - collectibles[i].posX;
-					// get the y distance
-					var b = ship.posY - collectibles[i].posY;
-
-					// pythagoreans thing to get actual distance
-					var c = Math.sqrt( a*a + b*b);
-					// combined value of both radii
-					var radii = (ship.size + collectibles[i].size);
-
-					// if distance is less than both radii then they hit!
-					if (c < radii){
-						// get collected nerd!
-						var newValues = collectibles[i].collected();
-						// the new values are returned by the collected function
-						score += newValues.score;
-						timer += newValues.timer;
-					}
-				}	
-			}
-
-			// gameEnd
-			// * do all the things for when the game is over
-			function gameEnd(){
-				gameState = "highscore"
-				timer = START_TIME;
-				elapsed_time = 0;
-				
-				for (var x= collectibles.length; x > 0; x--){
-					collectibles.pop();
-				}
-				collectibles = [];
-			}
-
-			// drawUI
-			// * draw the score and time remaining.
-			// * gets called every animation frame
-			function drawUI(){
-				
-				// if the game is on the title screen draw this
-				if (gameState == "title"){
-					// save current draw settings
-					ctx.save();
-
-					// set the font
-					ctx.font = "50px Arial";
-					ctx.fillStyle = "white";
-
-					// actually draw the text
-					ctx.fillText("TIME CHASERS", 50, CANVAS_HEIGHT/2);
-
-					ctx.font = "20px Arial";
-					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2 + 50);
-
-					ctx.font = "12px Arial";
-					ctx.fillText("Up/A speed up, Down/S slow down", 50, CANVAS_HEIGHT/2 + 65);
-					ctx.fillText("Left Right/A D turn left and right", 50, CANVAS_HEIGHT/2 + 80);
-					ctx.fillText("BLUE orbs ADDS, RED SUBTRACTS, GREEN are POINTS", 50, CANVAS_HEIGHT/2 + 95);
-
-					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
-
-					//restore the draw settings
-					ctx.restore();
-				}
-
-				// if the game is currently "play"ing draw this
-				else if (gameState == "play"){
-					// save current draw settings
-					ctx.save();
-					// set the font
-					ctx.font = "20px Arial";
-					ctx.fillStyle = "white";
-
-					// actually draw the text
-					ctx.fillText("Score: " + score, 10, 30);
-					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
-					ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
-
-
-					//restore the draw settings
-					ctx.restore();
-				} 
-
-				// if you are on the highscore screen draw this
-				else if (gameState == "highscore") {
-					// save current draw settings
-					ctx.save();
-					// set the font
-					ctx.font = "50px Arial";
-					ctx.fillStyle = "white";
-
-					// actually draw the text
-					ctx.fillText("Time is Up!", CANVAS_WIDTH/2 - 100, 200);
-					ctx.fillText("Score:" + score, CANVAS_WIDTH/2 - 100, 250);
-
-					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
-
-					//restore the draw settings
-					ctx.restore();
-				}
-
-				// if paused draw this 
-				else if (gameState == "pause") {
-
-					// save current draw settings
-					ctx.save();
-
-					// set the font
-					ctx.font = "20px Arial";
-					ctx.fillStyle = "white";
-
-					// actually draw the text
-					ctx.fillText("Score: " + score, 10, 30);
-					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
-
-					ctx.globalAlpha = 0.2;
-					ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
-					ctx.globalAlpha = 1;
-
-					// set the font
-					ctx.font = "50px Arial";
-					ctx.fillStyle = "white";
-
-					// actually draw the text
-					ctx.fillText(">> PAUSE <<", 80, CANVAS_HEIGHT/2);
-
-					ctx.font = "20px Arial"
-					ctx.fillText("Press P to resume", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
-
-					//restore the draw settings
-					ctx.restore();
-
-				}
-			}
-
-			// Update
-			// * calls the request animation frame
-			// * causing the things within to repeat every 1/60th of a second
-			function update(){
-
-				// this schedules a call to the update() method in 1/60 seconds
-				requestAnimationFrame(update);
-
-				// redraws the background, a page clear.
-				ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
-
-				// if the timer runs out, go to the highscore screen
-				if (timer <= 0) {
-					gameEnd();
-				};
-
-
-				// if the gamestate is the title screen
-				if( gameState == "play"){
-					
-					// handle the ship moving
-					if (pressDown == true){
-						ship.moveDown();
-					} else if (pressUp == true){
-						ship.moveUp();
-					} else if (pressLeft == true){
-						ship.moveLeft();
-					} else if (pressRight == true){
-						ship.moveRight();
-					}
-
-					//move the ship, then draw it
-					ship.move();
-					ship.drawShip(ctx);
-
-					// generate the collectibles
-					if (collectibles.length < MIN_COLLECTIBLES){
-						var newGem = makeGem();
-						collectibles.push(newGem);
-						var newSeal = makeSeal();
-						collectibles.push(newSeal);
-					}
-
-					// check the score, and create more obstacles as it gets higher. If the time/20 is a higher number, use that number for collectibles instead.
-					if (num_collectibles < MAX_COLLECTIBLES){ 
-						num_collectibles = Math.max((score/250 + 3) , (elapsed_time/10 + 3) );
-					}
-					if (num_collectibles > MAX_COLLECTIBLES){
-						num_collectibles = MAX_COLLECTIBLES;
-					}
-					if (collectibles.length < Math.floor(num_collectibles)){
-						if (score % 1000 == 0){
-							var newGem = makeGem();
-							collectibles.push(newGem);
-						} 
-						if (score % 250 == 0){
-							var newTear = makeTear();
-							collectibles.push(newTear);
-						}
-					}
-					
-
-					// Calculate the time, then draw the UI
-					timer -= (1/60);
-					elapsed_time += (1/60);
-					
-					// Do different behaviors if the score is over certain 
-					// thresholds, refered to as "Score_THRESHOLD"s
-					for (var i=0; i< collectibles.length; i++){
-						if ( score >= SCORE_THRESHOLD1 || timer > 60 || elapsed_time > TIME_THRESHOLD1){
-							if (collectibles[i].TYPE == "seal"){
-								collectibles[i].move(ship.posX, ship.posY);
-							}
-						} 
-						if ( score >= SCORE_THRESHOLD2 || timer > 80 || elapsed_time > TIME_THRESHOLD2){
-							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
-								collectibles[i].move(ship.posX, ship.posY);
-							}
-						}
-						if ( score > SCORE_THRESHOLD3 || elapsed_time > TIME_THRESHOLD3){
-							collectibles[i].move(ship.posX, ship.posY);
-						}
-						collectibles[i].draw(ctx);
-					}
-
-
-
-					// Draw the UI 
-					drawUI();
-					
-
-					window.onblur = function(){
-						if (gameState == "play"){
-							gameState = "pause";
-						}
-					} 
-
-					checkCollision();
-
-				} else if (gameState == "title") {
-
-					// draw the title UI
-					drawUI();
-
-				} else if (gameState == "highscore"){
-					
-					// ADD CODE TO SAVE THE HIGHSCORE HERE
-
-					ship.shipReset();
-					drawUI();
-
-				} else if (gameState == "pause"){
-
-					ship.shipPause();
-					ship.drawShip(ctx);
-					drawUI();
-
-					
-					
-				} // end if chain
-			}
-
-		}());
-	</script>
+			$("#game").click(function () {
+				$("body").animate({
+					scrollLeft: $(".game").offset().left -200
+				}, 1000);
+			});
+		});
+		</script>
 
 	</body>
 </html>
