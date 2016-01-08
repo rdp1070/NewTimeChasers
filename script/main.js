@@ -25,22 +25,29 @@
 			var pressDown = false;
 
 			// Static Variables
-			var CANVAS_HEIGHT = 600;
-			var CANVAS_WIDTH = 600;
+			var CANVAS_WIDTH = 640;
+			var CANVAS_HEIGHT = 520;
 			var START_TIME = 15;
 			var START_SCORE = 0;
 			var MIN_COLLECTIBLES = 3;
 			var MAX_COLLECTIBLES = 14;
 			
 			// Static Score Thresholds
-			var SCORE_THRESHOLD1 = 1500;
-			var SCORE_THRESHOLD2 = 3000;
-			var SCORE_THRESHOLD3 = 4500;
+			var SCORE_THRESHOLDS = {
+				one : 1500,
+				two : 3000,
+				three : 4500,
+				four : 9000,
+			}
+			
 
 			// Static Time Thresholds
-			var TIME_THRESHOLD1 = 45;
-			var TIME_THRESHOLD2 = 60;
-			var TIME_THRESHOLD3 = 120;
+			var TIME_THRESHOLDS = {
+				one : 45,
+				two : 60,
+				three : 120,
+				four : 180
+			}
 
 
 			// init
@@ -102,7 +109,7 @@
 						score = START_SCORE;
 					} else {
 						// a cheat to add time for now
-						//score+= 100;
+						score+= 100;
 						//timer++;
 					}
 				}//  end SPACE if statement
@@ -361,21 +368,25 @@
 					elapsed_time += (1/60);
 					
 					// Do different behaviors if the score is over certain 
-					// thresholds, refered to as "Score_THRESHOLD"s
+					// thresholds, refered to as "SCORE_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
-						if ( score >= SCORE_THRESHOLD1 || timer > 60 || elapsed_time > TIME_THRESHOLD1){
-							if (collectibles[i].TYPE == "seal"){
+						
+						if ( score > SCORE_THRESHOLDS.three || elapsed_time > TIME_THRESHOLDS.three){
+							collectibles[i].move(ship.posX, ship.posY);
+							if (collectibles[i].TYPE == "tear"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
-						} 
-						if ( score >= SCORE_THRESHOLD2 || timer > 80 || elapsed_time > TIME_THRESHOLD2){
+						}
+						else if ( score >= SCORE_THRESHOLDS.two || timer > 80 || elapsed_time > TIME_THRESHOLDS.two){
 							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						}
-						if ( score > SCORE_THRESHOLD3 || elapsed_time > TIME_THRESHOLD3){
-							collectibles[i].move(ship.posX, ship.posY);
-						}
+						else if ( score >= SCORE_THRESHOLDS.one || timer > 60 || elapsed_time > TIME_THRESHOLDS.one){
+							if (collectibles[i].TYPE == "seal"){
+								collectibles[i].move(ship.posX, ship.posY);
+							}
+						} 
 						collectibles[i].draw(ctx);
 					}
 
