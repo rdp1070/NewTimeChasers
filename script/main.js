@@ -370,7 +370,6 @@
 					// Do different behaviors if the score is over certain 
 					// thresholds, refered to as "SCORE_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
-						
 						if ( score > SCORE_THRESHOLDS.three || elapsed_time > TIME_THRESHOLDS.three){
 							collectibles[i].move(ship.posX, ship.posY);
 							if (collectibles[i].TYPE == "tear"){

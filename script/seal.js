@@ -7,7 +7,7 @@ function makeSeal(){
 		// Variables
 		posX: Math.random() *(canvas.width - 10) + 10,
 		posY :  Math.random() *(canvas.height - 10) + 10,
-		size : 10,
+		size : 15,
 		velocity : {
 			x: 0,
 			y: 0,
@@ -32,27 +32,56 @@ function makeSeal(){
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
-			ctx.save();
-			ctx.fillStyle = "blue";
-			ctx.beginPath();
-			// temporary drawing of a blue circle to represent the seal
-			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
-			ctx.fill();
-			ctx.closePath();
-			ctx.restore();
+		this.setImage();
+			
+			if (!this.img){
+				ctx.save();
+				ctx.fillStyle = "blue";
+				ctx.beginPath();
+				// temporary drawing of a blue circle to represent the seal
+				ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				ctx.fill();
+				ctx.closePath();
+				ctx.restore();
 
 
-			// Debug line for direction
-			ctx.save();
-			ctx.strokeStyle = "white";
-			ctx.beginPath();
-			ctx.moveTo(this.posX, this.posY);
-			ctx.lineTo(this.posX + (50 * Math.cos(this.rotation)),this.posY + (50 * Math.sin(this.rotation)));
-			ctx.stroke();
-			ctx.closePath();
-			ctx.restore();
-			// end debug line
+			} 
+			else {				
+				
+				// ctx.save();
+				// ctx.fillStyle = "blue";
+				// ctx.beginPath();
+				// // temporary drawing of a blue circle to represent the seal
+				// ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				// ctx.fill();
+				// ctx.closePath();
+				// ctx.restore();
+
+				ctx.save();
+				// translate it to the pivot point
+				ctx.translate( this.posX, this.posY);
+				// tell it how to rotate and where to rotate
+				ctx.rotate(this.rotation);
+				// draw the image, subtracting the size of the image
+				ctx.drawImage(this.img, -this.size , -this.size );
+				ctx.restore();
+			}
+			
 		},
+
+		// setImage()
+		// * set the image of the gem to the appropriate img
+		// * so when you draw it in the draw function 
+		// * it's the right one
+		setImage: function(){
+			this.img = new Image();
+			this.img.onload = function(){
+				//blah
+			}
+
+			this.img.src = "media/BlueGem.gif";
+		},
+
 
 		// collected
 		// * randomize the location of collected thing
@@ -73,7 +102,7 @@ function makeSeal(){
 		},
 
 		// move
-		// * move towards the ship
+		// * move away from the ship
 		move: function(shipX, shipY){
 			
 			this.calcVelocity(shipX, shipY);
@@ -102,8 +131,8 @@ function makeSeal(){
 		},
 
 		calcVelocity: function(shipX, shipY){
-			// The velocity of each tear should pont it in the direction
-			// of the ship's current location. And it should head towards it
+			// The velocity of each tear should point in the direction
+			// opposite of the ship's current location. And it should head towards it
 			// at the set speed. 
 
 			// get the x distance
@@ -122,12 +151,19 @@ function makeSeal(){
 			// asin returns in radians
 			this.rotation = Math.asin(sin);
 			//console.log("seal rotation:" + this.rotation);
-			this.rotation += 180;
-			// convert deg back to radians from degrees
+			//this.rotation += 2;
 		
 			if ( h < this.chase_range){
-				this.velocity.x = this.speed * Math.cos(this.rotation );
-				this.velocity.y = this.speed * Math.sin(this.rotation );
+
+				// this calculates the x velocity of the seal
+				// make sure the speed is inversed, otherwise it will
+				// head directly at it.
+				this.velocity.x = -this.speed * Math.cos(this.rotation );
+				// this calculates the y velocity of the seal
+				// make sure the speed is inversed, otherwise it will
+				// head directly at it.
+				this.velocity.y = -this.speed * Math.sin(this.rotation );
+
 			} else {
 				this.velocity.x = 0;
 				this.velocity.y = 0;
