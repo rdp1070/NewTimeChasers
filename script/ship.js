@@ -7,7 +7,7 @@ function makeShip(){
 		// Variables
 		posX: canvas.width/2,
 		posY : canvas.height/2,
-		size: 15,
+		size: 20,
 		velocity : {
 			x: 0,
 			y: 0,
@@ -113,27 +113,61 @@ function makeShip(){
 		// * in the appropriate position
 		drawShip: function(_ctx){
 			var ctx = _ctx;
-			ctx.save();
-			ctx.fillStyle = "aqua";
-			ctx.beginPath();
-			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
-			ctx.closePath();
-			ctx.fill();
-			ctx.restore();
+			this.setImage();
 
-			// Debug line for direction
-			ctx.save();
-			ctx.strokeStyle = "white";
-			ctx.beginPath();
-			ctx.moveTo(this.posX, this.posY);
-			ctx.lineTo(this.posX + (50 * Math.cos(this.rotation)),this.posY + (50 * Math.sin(this.rotation)));
-			ctx.stroke();
-			ctx.closePath();
-			ctx.restore();
-			// end debug line
+			if (!this.img){
+				ctx.save();
+				ctx.fillStyle = "white";
+				ctx.beginPath();
+				// temporary drawing of a blue circle to represent the seal
+				ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				ctx.fill();
+				ctx.closePath();
+				ctx.restore();
+			} 
+			else {				
+				
+			
+				ctx.save();
+				// translate it to the pivot point
+				ctx.translate( this.posX, this.posY);
+				// tell it how to rotate and where to rotate
+				ctx.rotate(this.rotation);
+				// draw the image, subtracting the size of the image
+				// using the frames here I am able to animate the sprite. 
+				ctx.drawImage(this.img, 50 * Math.floor(this.frame) , 0, 50, 40, -this.size, -this.size,  50, 40);
+
+				ctx.restore();
+				
+				// this sets the frame speed. 
+				if ( this.frame < 3)
+					this.frame += 1/ 10;
+				else
+					this.frame = 0;
+
+				// ctx.save();
+				// ctx.fillStyle = "white";
+				// ctx.beginPath();
+				// // temporary drawing of a blue circle to represent the seal
+				// ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				// ctx.fill();
+				// ctx.closePath();
+				// ctx.restore();
+
+			}
 		},
 
-
+		// setImage()
+		// * set the image of the gem to the appropriate img
+		// * so when you draw it in the draw function 
+		// * it's the right one
+		setImage: function(){
+			this.img = new Image();
+			this.img.onload = function(){
+				//blah
+			}
+			this.img.src = "media/ship.png";
+		},
 
 		// calcVelocity 
 		// * calculates the x and y of the velocity

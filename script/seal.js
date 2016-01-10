@@ -13,6 +13,7 @@ function makeSeal(){
 			y: 0,
 		},
 		rotation: 0,
+		frame: 0,
 		speed : 1.5,
 		top_speed : 5,
 		chase_range : 200 ,
@@ -32,7 +33,7 @@ function makeSeal(){
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
-		this.setImage();
+			this.setImage();
 			
 			if (!this.img){
 				ctx.save();
@@ -63,8 +64,16 @@ function makeSeal(){
 				// tell it how to rotate and where to rotate
 				ctx.rotate(this.rotation);
 				// draw the image, subtracting the size of the image
-				ctx.drawImage(this.img, -this.size , -this.size );
+				// using the frames here I am able to animate the sprite. 
+				ctx.drawImage(this.img, 30 * Math.floor(this.frame) , 0, 30, 30, -this.size, -this.size,  30, 30);
+
 				ctx.restore();
+				
+				// this sets the frame speed. 
+				if ( this.frame < 9)
+					this.frame += 1/5;
+				else
+					this.frame = 0;
 			}
 			
 		},
@@ -79,7 +88,7 @@ function makeSeal(){
 				//blah
 			}
 
-			this.img.src = "media/BlueGem.gif";
+			this.img.src = "media/orb.png";
 		},
 
 
@@ -87,10 +96,7 @@ function makeSeal(){
 		// * randomize the location of collected thing
 		// * return the score and time changes 
 		collected: function(){
-
-			this.posX = Math.random() *((canvas.width - 200) - 50) + 50;
-			this.posY =  Math.random() *((canvas.height - 200) - 50) + 50;
-
+			this.randomize();
 			return { score: 0, timer: 5};
 		},
 

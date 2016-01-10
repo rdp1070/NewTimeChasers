@@ -7,7 +7,7 @@ function makeTear(){
 		// Variables
 		posX: Math.random() *(canvas.width - 10) + 10,
 		posY :  Math.random() *(canvas.height - 10) + 10,
-		size : 10,
+		size : 15,
 		velocity : {
 			x: 0,
 			y: 0,
@@ -32,14 +32,48 @@ function makeTear(){
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
-			ctx.save();
-			ctx.fillStyle = "red";
-			ctx.beginPath();
-			// temporary drawing of a red circle to represent the tear
-			ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
-			ctx.fill();
-			ctx.closePath();
-			ctx.restore();
+			this.setImage();
+
+			if (!this.img){
+				ctx.save();
+				ctx.fillStyle = "red";
+				ctx.beginPath();
+				// temporary drawing of a blue circle to represent the seal
+				ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				ctx.fill();
+				ctx.closePath();
+				ctx.restore();
+			} 
+			else {				
+				
+			
+				ctx.save();
+				// translate it to the pivot point
+				ctx.translate( this.posX, this.posY);
+				// tell it how to rotate and where to rotate
+				ctx.rotate(this.rotation);
+				// draw the image, subtracting the size of the image
+				// using the frames here I am able to animate the sprite. 
+				ctx.drawImage(this.img, 30 * Math.floor(this.frame) , 0, 30, 30, -this.size, -this.size,  30, 30);
+
+				ctx.restore();
+				
+				// this sets the frame speed. 
+				if ( this.frame < 9)
+					this.frame += 1/3;
+				else
+					this.frame = 0;
+
+				// ctx.save();
+				// ctx.fillStyle = "red";
+				// ctx.beginPath();
+				// // temporary drawing of a blue circle to represent the seal
+				// ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
+				// ctx.fill();
+				// ctx.closePath();
+				// ctx.restore();
+
+			}
 
 		},
 
@@ -48,9 +82,7 @@ function makeTear(){
 		// * return the score and time changes 
 		collected: function(){
 
-			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 10) + 10;
-			
+			this.randomize();
 			return { score: 0, timer: -3};
 		},
 
@@ -89,6 +121,19 @@ function makeTear(){
 				this.posX += this.velocity.x;
 			}
 
+		},
+
+		// setImage()
+		// * set the image of the gem to the appropriate img
+		// * so when you draw it in the draw function 
+		// * it's the right one
+		setImage: function(){
+			this.img = new Image();
+			this.img.onload = function(){
+				//blah
+			}
+
+			this.img.src = "media/RedOrb.png";
 		},
 
 		calcVelocity: function(shipX, shipY){

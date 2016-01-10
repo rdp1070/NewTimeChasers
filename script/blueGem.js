@@ -1,6 +1,6 @@
 "use strict"
 
-function makeGem(){
+function makeBlueGem(){
 	var gem;
 	return gem = {
 
@@ -26,7 +26,7 @@ function makeGem(){
 		TYPE : "gem",
 
 		// drawShip
-		// * for now just draw a tiny green square that will
+		// * for now just draw a tiny blue square that will
 		// * be a place holder for the gem
 		// * PLANNED
 		// * import graphics for the gem and place it 
@@ -37,9 +37,9 @@ function makeGem(){
 			
 			if (!this.img){
 				ctx.save();
-				ctx.fillStyle = "green";
+				ctx.fillStyle = "blue";
 				ctx.beginPath();
-				// temporary drawing of a green circle to represent the seal
+				// temporary drawing of a blue circle to represent the seal
 				ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
 				ctx.fill();
 				ctx.closePath();
@@ -50,9 +50,9 @@ function makeGem(){
 			else {				
 				
 				// ctx.save();
-				// ctx.fillStyle = "green";
+				// ctx.fillStyle = "blue";
 				// ctx.beginPath();
-				// // temporary drawing of a green circle to represent the seal
+				// // temporary drawing of a blue circle to represent the seal
 				// ctx.arc(this.posX,this.posY,this.size,0,2*Math.PI);
 				// ctx.fill();
 				// ctx.closePath();
@@ -80,7 +80,7 @@ function makeGem(){
 				//blah
 			}
 
-			this.img.src = "media/GreenGem.png";
+			this.img.src = "media/blueGem.png";
 		},
 
 
@@ -89,7 +89,7 @@ function makeGem(){
 		// * return the score and time changes 
 		collected: function(){
 			this.randomize();
-			return { score: 100, timer: 0};
+			return { score: 25, timer: .5};
 		},
 
 		// randomize

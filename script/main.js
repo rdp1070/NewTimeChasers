@@ -10,6 +10,8 @@
 			var elapsed_time;
 			var score;
 			var num_collectibles = 5;
+			var backgroundImage = 0;
+
 
 			// gameState should have 4 settings
 			// title: for the title screen
@@ -56,7 +58,14 @@
 				// get the canvas from the document
 				// get the context for the canvas
 				canvas = document.querySelector("#canvas");
-				ctx = canvas.getContext("2d");
+				ctx = canvas.getContext('2d');
+
+				//image smoothing
+				ctx.mozImageSmoothingEnabled = true;
+				ctx.webkitImageSmoothingEnabled = true;
+				ctx.msImageSmoothingEnabled = true;
+				ctx.imageSmoothingEnabled = true;
+
 
 				// use event listeners attached to the window to call the 
 				// onkeydown function
@@ -69,6 +78,10 @@
 
 				// set gameState
 				gameState = "title";
+
+				// get the background image
+				backgroundImage = new Image();
+				backgroundImage.src = "media/space.png";
 
 				// set the canvas height and width
 				canvas.height = CANVAS_HEIGHT;
@@ -92,15 +105,15 @@
 				
 				// this is the events for the arrows
 				if (e.which == '37'){pressLeft = true;}
-				else if (e.which == '39'){pressRight = true;}
-				else if (e.which == '38'){pressUp = true;}
-				else if (e.which == '40'){pressDown = true;};
+				if (e.which == '39'){pressRight = true;}
+				if (e.which == '38'){pressUp = true;}
+				if (e.which == '40'){pressDown = true;};
 				
 				// this is for "wasd"
 				if (e.which == '65'){ pressLeft = true}
-				else if (e.which == '68'){ pressRight = true}
-				else if (e.which == '87'){ pressUp = true}
-				else if (e.which == '83'){ pressDown = true};
+				if (e.which == '68'){ pressRight = true}
+				if (e.which == '87'){ pressUp = true}
+				if (e.which == '83'){ pressDown = true};
 
 				// this is for the space bar
 				if (e.which == '32'){
@@ -134,15 +147,15 @@
 				//console.log("key up");
 				// this is the events for the arrows
 				if (e.which == '37'){pressLeft = false;}
-				else if (e.which == '39'){pressRight = false;}
-				else if (e.which == '38'){pressUp = false;}
-				else if (e.which == '40'){pressDown = false;};
+				if (e.which == '39'){pressRight = false;}
+				if (e.which == '38'){pressUp = false;}
+				if (e.which == '40'){pressDown = false;}
 				
 				// this is for "wasd"
 				if (e.which == '65'){ pressLeft = false}
-				else if (e.which == '68'){ pressRight = false}
-				else if (e.which == '87'){ pressUp = false}
-				else if (e.which == '83'){ pressDown = false};
+				if (e.which == '68'){ pressRight = false}
+				if (e.which == '87'){ pressUp = false}
+				if (e.which == '83'){ pressDown = false}
 			}
 
 			function checkCollision(){
@@ -213,7 +226,9 @@
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText("TIME CHASERS", 50, CANVAS_HEIGHT/2);
+					var titleImg = new Image ();
+					titleImg.src = "media/Title.png";
+					ctx.drawImage(titleImg, 30, 40, 600, 300);
 
 					ctx.font = "20px Arial";
 					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2 + 50);
@@ -240,7 +255,7 @@
 
 					// actually draw the text
 					ctx.fillText("Score: " + score, 10, 30);
-					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
+					ctx.fillText("Time: " + timer.toFixed(2), 150, 30);
 					ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
 
 
@@ -310,7 +325,8 @@
 				requestAnimationFrame(update);
 
 				// redraws the background, a page clear.
-				ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
+				//ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
+				ctx.drawImage(backgroundImage, 0,0);
 
 				// if the timer runs out, go to the highscore screen
 				if (timer <= 0) {
@@ -324,11 +340,14 @@
 					// handle the ship moving
 					if (pressDown == true){
 						ship.moveDown();
-					} else if (pressUp == true){
+					}
+					if (pressUp == true){
 						ship.moveUp();
-					} else if (pressLeft == true){
+					}
+					if (pressLeft == true){
 						ship.moveLeft();
-					} else if (pressRight == true){
+					}
+					if (pressRight == true){
 						ship.moveRight();
 					}
 
@@ -344,7 +363,8 @@
 						collectibles.push(newSeal);
 					}
 
-					// check the score, and create more obstacles as it gets higher. If the time/20 is a higher number, use that number for collectibles instead.
+					// Check the score, and create more obstacles as it gets higher. 
+					// If the time/10 is a higher number, use that number for collectibles instead.
 					if (num_collectibles <= MAX_COLLECTIBLES){ 
 						num_collectibles = Math.max((score/250 + 3) , (elapsed_time/10 + 3) );
 					}
@@ -352,11 +372,15 @@
 						num_collectibles = MAX_COLLECTIBLES;
 					}
 					if (collectibles.length < Math.floor(num_collectibles)){
-						if (score % 1000 == 0){
+						if (score % 1000 >= 0){
 							var newGem = makeGem();
 							collectibles.push(newGem);
 						} 
-						if (score % 250 == 0){
+						if (score % 2000 >= 0){
+							var newGem = makeBlueGem();
+							collectibles.push(newGem);
+						}
+						if (score % 250 >= 0){
 							var newTear = makeTear();
 							collectibles.push(newTear);
 						}
