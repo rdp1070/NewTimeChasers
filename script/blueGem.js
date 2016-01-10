@@ -23,7 +23,7 @@ function makeBlueGem(){
 		MIN_SPEED : 0,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
-		TYPE : "gem",
+		TYPE : "blueGem",
 
 		// drawShip
 		// * for now just draw a tiny blue square that will
@@ -89,7 +89,7 @@ function makeBlueGem(){
 		// * return the score and time changes 
 		collected: function(){
 			this.randomize();
-			return { score: 25, timer: .5};
+			return { score: 50, timer: 2, delete: function(){ return true; }};
 		},
 
 		// randomize

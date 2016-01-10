@@ -11,7 +11,14 @@
 			var score;
 			var num_collectibles = 5;
 			var backgroundImage = 0;
+			var background_frame = 0;
 
+			// Maximum number of collectible.
+			var max_gems = 0;
+			var max_blue_gems = 0;
+			var max_tears = 0;
+			var max_seals = 1;
+			var max_pink_gems = 1;
 
 			// gameState should have 4 settings
 			// title: for the title screen
@@ -117,9 +124,11 @@
 
 				// this is for the space bar
 				if (e.which == '32'){
-					if (gameState == "title" || gameState == "highscore"){
+					if (gameState == "title" ){
 						gameState = "play";
 						score = START_SCORE;
+					} else if (gameState == "highscore"){
+						gameState = "title";
 					} else {
 						// a cheat to add time for now
 						score+= 100;
@@ -178,6 +187,15 @@
 						// the new values are returned by the collected function
 						score += newValues.score;
 						timer += newValues.timer;
+						// if the collectible wants to delete, delete it.
+						if (newValues.delete){
+							if (newValues.delete() == true){
+								var temp = collectibles[i];
+								collectibles[i] = collectibles[collectibles.length-1];
+								collectibles[collectibles.length -1] = temp;
+								collectibles.pop(); 
+							}
+						}
 					}
 				}	
 			}
@@ -186,7 +204,7 @@
 			// * do all the things for when the game is over
 			function gameEnd(){
 				
-				/* Check to see if there is local storage for this browser
+				/* //Check to see if there is local storage for this browser
 				if(typeof(Storage) !== "undefined") {
 				    for (var x = 0; x < localStorage.NTC_highscores.length; x++){
 				    	if (score > localStorage.NTC_highscores[x]){
@@ -228,7 +246,7 @@
 					// actually draw the text
 					var titleImg = new Image ();
 					titleImg.src = "media/Title.png";
-					ctx.drawImage(titleImg, 30, 40, 600, 300);
+					ctx.drawImage(titleImg, 20, 0, 600, 300);
 
 					ctx.font = "20px Arial";
 					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2 + 50);
@@ -256,7 +274,7 @@
 					// actually draw the text
 					ctx.fillText("Score: " + score, 10, 30);
 					ctx.fillText("Time: " + timer.toFixed(2), 150, 30);
-					ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
+					//ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
 
 
 					//restore the draw settings
@@ -276,7 +294,7 @@
 					ctx.fillText("Score:" + score, CANVAS_WIDTH/2 - 100, 250);
 
 					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
+					ctx.fillText("Press SPACE to return to menu", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
@@ -296,9 +314,10 @@
 					ctx.fillText("Score: " + score, 10, 30);
 					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
 
+					ctx.save();
 					ctx.globalAlpha = 0.2;
 					ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
-					ctx.globalAlpha = 1;
+					ctx.restore();
 
 					// set the font
 					ctx.font = "50px Arial";
@@ -324,9 +343,10 @@
 				// this schedules a call to the update() method in 1/60 seconds
 				requestAnimationFrame(update);
 
-				// redraws the background, a page clear.
-				//ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
-				ctx.drawImage(backgroundImage, 0,0);
+				// draw the image, subtracting the size of the image
+				// using the background_frames here I am able to animate the sprite. 
+				ctx.drawImage(backgroundImage, 640 * Math.floor(background_frame) , 0, 640, 520, 0, 0,  640, 520);
+
 
 				// if the timer runs out, go to the highscore screen
 				if (timer <= 0) {
@@ -355,36 +375,108 @@
 					ship.move();
 					ship.drawShip(ctx);
 
-					// generate the collectibles
-					if (collectibles.length < MIN_COLLECTIBLES){
-						var newGem = makeGem();
-						collectibles.push(newGem);
-						var newSeal = makeSeal();
-						collectibles.push(newSeal);
-					}
-
 					// Check the score, and create more obstacles as it gets higher. 
 					// If the time/10 is a higher number, use that number for collectibles instead.
 					if (num_collectibles <= MAX_COLLECTIBLES){ 
-						num_collectibles = Math.max((score/250 + 3) , (elapsed_time/10 + 3) );
+						num_collectibles = Math.max((score/250 + 4) , (elapsed_time/10 + 4) );
 					}
 					if (num_collectibles > MAX_COLLECTIBLES){
 						num_collectibles = MAX_COLLECTIBLES;
 					}
+
+					// set the maximum number per collectible
+					// max_type = Math.floor(score/(number required to add one more))+ minimum;
+					max_gems = Math.min(Math.floor(score/1000) +3, 5);
+					max_blue_gems = 1;
+					max_tears = Math.min((Math.floor(score/250) +1) , 5);
+					max_pink_gems = Math.min((Math.floor(score/500)) , 1);
+
+					// check if the array of collectibles has the correct amount of collectibles in it.
+					//console.log("num_collectibles: " + num_collectibles );
 					if (collectibles.length < Math.floor(num_collectibles)){
-						if (score % 1000 >= 0){
-							var newGem = makeGem();
+						
+						// create the counting variables
+						var num_gems = 0;
+						var num_blue_gems = 0;
+						var num_tears = 0;
+						var num_seals = 0;
+						var num_pink_gems = 0;
+
+						// go through all of the collectibles and count them based on type
+						for (var i = 0; i < collectibles.length; i++){
+
+							if (collectibles[i].TYPE == "gem"){
+								num_gems++;
+							} else if (collectibles[i].TYPE == "blueGem"){
+								num_blue_gems++;
+							} else if (collectibles[i].TYPE == "tear"){
+								num_tears++;
+							} else if (collectibles[i].TYPE == "pinkGem"){
+								num_pink_gems++;
+							} else if (collectibles[i].TYPE == "seal"){
+								num_seals++;
+							}
+						}
+
+						// if the number of a thing is less than the max, generate one
+
+						// make the gems
+						if ( num_gems < max_gems){
+							//console.log("num gems: "+ num_gems +", max gems: " + max_gems );
+							// give it a one in 5 chance to be a blue gem when it's made.
+							var randNum = Math.floor(Math.random() *5 + 1);
+							var newGem;
+							if (randNum == 4 && num_blue_gems < max_blue_gems){
+								newGem = makeBlueGem();
+							} else if ( randNum * 2 == 8 && num_pink_gems < max_pink_gems) {
+								newGem = makePinkGem();
+							} else {
+								newGem = makeGem();
+							}
+							
 							collectibles.push(newGem);
 						} 
-						if (score % 2000 >= 0){
-							var newGem = makeBlueGem();
-							collectibles.push(newGem);
-						}
-						if (score % 250 >= 0){
+						// make the tears
+						if (num_tears < max_tears){
 							var newTear = makeTear();
 							collectibles.push(newTear);
+						} 
+						// make the seals
+						if (num_seals < max_seals){
+							var newSeal = makeSeal();
+							collectibles.push(newSeal);
 						}
+
+
 					}
+					
+					// // a chance to spawn a pink gem every 500 points.
+					// if (score % 500 == 0 && score != 0){	
+					
+					// 	var hasPink;
+					// 	// goes through the collectibles to find a pink one
+					// 	for (var i = 0; i < collectibles.length; i++){
+					// 		// if you find one, there is a pink one
+					// 		if (collectibles[i].TYPE == "pinkGem"){
+					// 			hasPink = true;
+					// 		} else {
+					// 			// if you don't find one, there is no pink
+					// 			hasPink = false;
+					// 		}
+					// 	}
+
+					// 	// if there is no pink, make one!
+					// 	if (hasPink == false){
+					// 		// generate two random numbers, if they are equal spawn the gem
+					// 		var num1 = Math.floor((Math.random() *(5) - 1));
+					// 		console.log(num1);
+					// 		if (num1 == 5){
+					// 			var newPinkGem = makePinkGem();
+					// 			collectibles.push(newPinkGem);
+					// 		}
+					// 	}	
+						
+					// }
 					
 
 					// Calculate the time, then draw the UI
@@ -396,17 +488,14 @@
 					for (var i=0; i< collectibles.length; i++){
 						if ( score > SCORE_THRESHOLDS.three || elapsed_time > TIME_THRESHOLDS.three){
 							collectibles[i].move(ship.posX, ship.posY);
-							if (collectibles[i].TYPE == "tear"){
-								collectibles[i].move(ship.posX, ship.posY);
-							}
 						}
 						else if ( score >= SCORE_THRESHOLDS.two || timer > 80 || elapsed_time > TIME_THRESHOLDS.two){
-							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" ){
+							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" || collectibles[i].TYPE == "pinkGem"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						}
 						else if ( score >= SCORE_THRESHOLDS.one || timer > 60 || elapsed_time > TIME_THRESHOLDS.one){
-							if (collectibles[i].TYPE == "seal"){
+							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "pinkGem"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						} 
@@ -445,9 +534,18 @@
 					ship.drawShip(ctx);
 					drawUI();
 
-					
-					
 				} // end if chain
+
+
+				// this sets the background_frame speed. 
+				if ( background_frame < 2){
+					background_frame += 1/15;
+				}
+				else{
+					background_frame = 0;
+				}
+					
+
 			}
 
 		}());
