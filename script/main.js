@@ -39,7 +39,7 @@
 			var START_TIME = 15;
 			var START_SCORE = 0;
 			var MIN_COLLECTIBLES = 3;
-			var MAX_COLLECTIBLES = 14;
+			var MAX_COLLECTIBLES = 20;
 			
 			// Static Score Thresholds
 			var SCORE_THRESHOLDS = {
@@ -169,36 +169,46 @@
 
 			function checkCollision(){
 				for (var i = 0; i< collectibles.length; i++){
-					// complicated collision checking nonsense.
-					// get the x distance
-					var a = ship.posX - collectibles[i].posX;
-					// get the y distance
-					var b = ship.posY - collectibles[i].posY;
+					if (collectibles[i].TYPE == "tear" && ship.invincible == true){
+						//do nothing!
+					} else {
+						// complicated collision checking nonsense.
+						// get the x distance
+						var a = ship.posX - collectibles[i].posX;
+						// get the y distance
+						var b = ship.posY - collectibles[i].posY;
 
-					// pythagoreans thing to get actual distance
-					var c = Math.sqrt( a*a + b*b);
-					// combined value of both radii
-					var radii = (ship.size + collectibles[i].size);
+						// pythagoreans thing to get actual distance
+						var c = Math.sqrt( a*a + b*b);
+						// combined value of both radii
+						var radii = (ship.size + collectibles[i].size);
 
-					// if distance is less than both radii then they hit!
-					if (c < radii){
-						// get collected nerd!
-						var newValues = collectibles[i].collected();
-						// the new values are returned by the collected function
-						score += newValues.score;
-						timer += newValues.timer;
-						// if the collectible wants to delete, delete it.
-						if (newValues.delete){
-							if (newValues.delete() == true){
-								var temp = collectibles[i];
-								collectibles[i] = collectibles[collectibles.length-1];
-								collectibles[collectibles.length -1] = temp;
-								collectibles.pop(); 
-							}
-						}
-					}
+						// if distance is less than both radii then they hit!
+						if (c < radii){
+							// get collected nerd!
+							var newValues = collectibles[i].collected();
+							// the new values are returned by the collected function
+							score += newValues.score;
+							timer += newValues.timer;
+							// if the collectible wants to delete, delete it.
+							if (newValues.delete){
+								// if the gem was pink, activate invincibility in the ship!
+								if ( collectibles[i].TYPE == "pinkGem"){
+									ship.invincible = true;
+									ship.invincibility_timer = 5;
+								}
+
+								if (newValues.delete() == true){
+									var temp = collectibles[i];
+									collectibles[i] = collectibles[collectibles.length-1];
+									collectibles[collectibles.length -1] = temp;
+									collectibles.pop(); 
+								}
+							} // end delete check
+						} // end radii check
+					} // end else
 				}	
-			}
+			}// end checkCollision()
 
 			// gameEnd
 			// * do all the things for when the game is over
@@ -388,7 +398,7 @@
 					// max_type = Math.floor(score/(number required to add one more))+ minimum;
 					max_gems = Math.min(Math.floor(score/1000) +3, 5);
 					max_blue_gems = 1;
-					max_tears = Math.min((Math.floor(score/250) +1) , 5);
+					max_tears = Math.min((Math.floor(score/250) +1) , 9);
 					max_pink_gems = Math.min((Math.floor(score/500)) , 1);
 
 					// check if the array of collectibles has the correct amount of collectibles in it.
@@ -428,7 +438,7 @@
 							var newGem;
 							if (randNum == 4 && num_blue_gems < max_blue_gems){
 								newGem = makeBlueGem();
-							} else if ( randNum * 2 == 8 && num_pink_gems < max_pink_gems) {
+							} else if ( randNum * 2 == 8 && num_pink_gems < max_pink_gems && score > SCORE_THRESHOLDS.two) {
 								newGem = makePinkGem();
 							} else {
 								newGem = makeGem();
@@ -450,44 +460,29 @@
 
 					}
 					
-					// // a chance to spawn a pink gem every 500 points.
-					// if (score % 500 == 0 && score != 0){	
-					
-					// 	var hasPink;
-					// 	// goes through the collectibles to find a pink one
-					// 	for (var i = 0; i < collectibles.length; i++){
-					// 		// if you find one, there is a pink one
-					// 		if (collectibles[i].TYPE == "pinkGem"){
-					// 			hasPink = true;
-					// 		} else {
-					// 			// if you don't find one, there is no pink
-					// 			hasPink = false;
-					// 		}
-					// 	}
-
-					// 	// if there is no pink, make one!
-					// 	if (hasPink == false){
-					// 		// generate two random numbers, if they are equal spawn the gem
-					// 		var num1 = Math.floor((Math.random() *(5) - 1));
-					// 		console.log(num1);
-					// 		if (num1 == 5){
-					// 			var newPinkGem = makePinkGem();
-					// 			collectibles.push(newPinkGem);
-					// 		}
-					// 	}	
-						
-					// }
-					
 
 					// Calculate the time, then draw the UI
 					timer -= (1/60);
 					elapsed_time += (1/60);
+					// count down the invincibility timer.
+					if (ship.invincible == true){
+						ship.invincibility_timer -= (1/60);
+					}
+					if (ship.invincibility_timer <= 0){
+						ship.invincible = false;
+					}
+
+
 					
 					// Do different behaviors if the score is over certain 
 					// thresholds, refered to as "SCORE_THRESHOLD"s
 					for (var i=0; i< collectibles.length; i++){
 						if ( score > SCORE_THRESHOLDS.three || elapsed_time > TIME_THRESHOLDS.three){
 							collectibles[i].move(ship.posX, ship.posY);
+							// this moves the tears twice as fast. 
+							if (collectibles[i].TYPE == "tear"){
+								collectibles[i].move(ship.posX, ship.posY);
+							}
 						}
 						else if ( score >= SCORE_THRESHOLDS.two || timer > 80 || elapsed_time > TIME_THRESHOLDS.two){
 							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" || collectibles[i].TYPE == "pinkGem"){
@@ -495,7 +490,7 @@
 							}
 						}
 						else if ( score >= SCORE_THRESHOLDS.one || timer > 60 || elapsed_time > TIME_THRESHOLDS.one){
-							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "pinkGem"){
+							if (collectibles[i].TYPE == "seal"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
 						} 

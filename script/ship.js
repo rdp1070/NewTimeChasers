@@ -14,7 +14,8 @@ function makeShip(){
 		},
 		rotation: 0,
 		speed : 3,
-		friction: .02,
+		invincible : false,
+		invincibility_timer: 0,
 
 		// Static Variables
 		MAX_SPEED : 8,
@@ -166,7 +167,11 @@ function makeShip(){
 			this.img.onload = function(){
 				//blah
 			}
-			this.img.src = "media/ship.png";
+			if (this.invincible == true ){
+				this.img.src = "media/pinkship.png";
+			} else {
+				this.img.src = "media/ship.png";
+			}
 		},
 
 		// calcVelocity 

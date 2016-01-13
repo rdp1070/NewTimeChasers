@@ -5,16 +5,16 @@ function makePinkGem(){
 	return gem = {
 
 		// Variables
-		posX: Math.random() *(canvas.width - 10) + 10,
+		posX: 0,
 		posY :  Math.random() *(canvas.height - 10) + 10,
 		size : 10,
 		velocity : {
 			x: 0,
 			y: 0,
 		},
-		rotation: Math.random() *(Math.PI*2) ,
+		rotation: Math.random() *(-Math.PI/4) + Math.PI/4,
 		rotation_speed: 0,
-		speed : 4,
+		speed : 1,
 		top_speed : 0,
 		img : 0,
 

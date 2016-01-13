@@ -13,9 +13,7 @@ function makeTear(){
 			y: 0,
 		},
 		rotation: 0,
-		top_speed: 3,
-		// can't get top speed to work in this speed calculation
-		speed : Math.random() *(5) - 2.5,
+		speed : Math.random() *(5) - 3,
 
 		// Static Variables
 		MAX_SPEED : 3,
