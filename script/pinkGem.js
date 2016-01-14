@@ -55,8 +55,14 @@ function makePinkGem(){
 				// tell it how to rotate and where to rotate
 				ctx.rotate(this.rotation + Math.PI/2);
 				// draw the image, subtracting the size of the image
-				ctx.drawImage(this.img, -this.size , -this.size );
+				ctx.drawImage(this.img, 21 * Math.floor(this.frame) , 0, 21, 29, -this.size, -this.size,  21, 29);
 				ctx.restore();
+				
+				// this sets the frame speed. 
+				if ( this.frame < 5)
+					this.frame += 1/5;
+				else
+					this.frame = 0;
 
 				// ctx.save();
 				// ctx.fillStyle = "pink";
@@ -82,7 +88,7 @@ function makePinkGem(){
 				//blah
 			}
 
-			this.img.src = "media/PinkGem2.gif";
+			this.img.src = "media/pinkGem.png";
 		},
 
 
@@ -96,8 +102,7 @@ function makePinkGem(){
 		// randomize
 		// * move to a random location
 		randomize: function(){
-			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 40) + 40;
+			// this doesn't happen for pinkGems
 		},
 
 		// move

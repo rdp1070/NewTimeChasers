@@ -5,8 +5,8 @@ function makeSeal(){
 	return seal = {
 
 		// Variables
-		posX: Math.random() *(canvas.width - 10) + 10,
-		posY :  Math.random() *(canvas.height - 10) + 10,
+		posX: Math.random() *(canvas.width - 100) + 100,
+		posY :  Math.random() *(canvas.height - 100) + 100,
 		size : 15,
 		velocity : {
 			x: 0,
@@ -103,8 +103,8 @@ function makeSeal(){
 		// randomize
 		// * move to a random location
 		randomize: function(){
-			this.posX = Math.random() *((canvas.width - 200) - 50) + 50;
-			this.posY =  Math.random() *((canvas.height - 200) - 50) + 50;
+			this.posX = Math.floor(Math.random() *(canvas.width - 100) + 100);
+			this.posY =  Math.floor(Math.random() *(canvas.height - 100) + 100);
 		},
 
 		// move

@@ -39,7 +39,7 @@
 			var START_TIME = 15;
 			var START_SCORE = 0;
 			var MIN_COLLECTIBLES = 3;
-			var MAX_COLLECTIBLES = 20;
+			var MAX_COLLECTIBLES = 19;
 			
 			// Static Score Thresholds
 			var SCORE_THRESHOLDS = {
@@ -232,6 +232,7 @@
 				gameState = "highscore"
 				timer = START_TIME;
 				elapsed_time = 0;
+				ship = makeShip();
 				
 				for (var x= collectibles.length; x > 0; x--){
 					collectibles.pop();
@@ -373,6 +374,8 @@
 					}
 					if (pressUp == true){
 						ship.moveUp();
+					} else {
+						ship.slowDown();
 					}
 					if (pressLeft == true){
 						ship.moveLeft();
@@ -398,7 +401,7 @@
 					// max_type = Math.floor(score/(number required to add one more))+ minimum;
 					max_gems = Math.min(Math.floor(score/1000) +3, 5);
 					max_blue_gems = 1;
-					max_tears = Math.min((Math.floor(score/250) +1) , 9);
+					max_tears = Math.min((Math.floor(score/250) +1) , 7);
 					max_pink_gems = Math.min((Math.floor(score/500)) , 1);
 
 					// check if the array of collectibles has the correct amount of collectibles in it.
@@ -520,12 +523,11 @@
 					
 					// ADD CODE TO SAVE THE HIGHSCORE HERE
 
-					ship.shipReset();
+					ship = makeShip();
 					drawUI();
 
 				} else if (gameState == "pause"){
 
-					ship.shipPause();
 					ship.drawShip(ctx);
 					drawUI();
 

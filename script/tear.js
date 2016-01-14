@@ -87,8 +87,8 @@ function makeTear(){
 		// randomize
 		// * move to a random location
 		randomize: function(){
-			this.posX = Math.random() *(canvas.width - 10) + 10;
-			this.posY =  Math.random() *(canvas.height - 40) + 40;
+			this.posX = Math.floor(Math.random() *(canvas.width - 100) + 100);
+			this.posY = Math.floor(Math.random() *(canvas.height - 100) + 100);
 		},
 
 		// move
