@@ -14,12 +14,13 @@ function makeShip(){
 		},
 		rotation: 0,
 		speed : 3,
+		friction : .97,
 		invincible : false,
 		invincibility_timer: 0,
 
 		// Static Variables
-		MAX_SPEED : 8,
-		MIN_SPEED : 0,
+		MAX_SPEED : 6,
+		MIN_SPEED : 1,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
 
@@ -55,6 +56,14 @@ function makeShip(){
 				else {
 					this.speed -= .1;
 				}
+			}
+		},
+
+		// slowDown
+		//* decelerate naturally
+		slowDown: function(){
+			if (this.speed > this.MIN_SPEED){
+				this.speed *= this.friction;
 			}
 		},
 
@@ -169,6 +178,8 @@ function makeShip(){
 			}
 			if (this.invincible == true ){
 				this.img.src = "media/pinkship.png";
+			} else if(this.invincibility_timer < 1 && this.invincibility_timer > 0) {
+				this.img.src = "media/shipFlash.png";
 			} else {
 				this.img.src = "media/ship.png";
 			}
@@ -187,6 +198,3 @@ function makeShip(){
 		},
 	}
 }; 
-
-
-

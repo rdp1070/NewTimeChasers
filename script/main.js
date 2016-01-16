@@ -131,7 +131,7 @@
 						gameState = "title";
 					} else {
 						// a cheat to add time for now
-						score+= 100;
+						//score+= 100;
 						//timer++;
 					}
 				}//  end SPACE if statement
@@ -249,9 +249,6 @@
 				if (gameState == "title"){
 					// save current draw settings
 					ctx.save();
-
-					// set the font
-					ctx.font = "50px Arial";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
@@ -259,16 +256,67 @@
 					titleImg.src = "media/Title.png";
 					ctx.drawImage(titleImg, 20, 0, 600, 300);
 
-					ctx.font = "20px Arial";
-					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2 + 50);
 
-					ctx.font = "12px Arial";
-					ctx.fillText("Up/A speed up, Down/S slow down", 50, CANVAS_HEIGHT/2 + 65);
-					ctx.fillText("Left Right/A D turn left and right", 50, CANVAS_HEIGHT/2 + 80);
-					ctx.fillText("BLUE orbs ADDS, RED SUBTRACTS, GREEN are POINTS", 50, CANVAS_HEIGHT/2 + 95);
+					// draw the blue orb
+					var orb = new Image();
+					orb.src = "media/orb.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dHeigh, dWidth
+					ctx.drawImage(orb, 0, 0, 30, 30, 220, 320, 30, 30);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("+5 sec", 260, 340);
 
-					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
+					// draw the red orb
+					var redOrb = new Image();
+					redOrb.src = "media/redOrb.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dHeigh, dWidth
+					ctx.drawImage(redOrb, 0, 0, 30, 30, 370, 320, 30, 30);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("-3 sec", 410, 340 );
+
+					// draw the blue gem
+					var blueGem = new Image();
+					blueGem.src = "media/blueGem.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
+					ctx.drawImage(blueGem, 0, 0, 30, 30, 170, 360, 30, 30);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("+2 sec", 220, 380);
+					ctx.fillText("50 pts", 220, 400);
+
+					// draw the green gem
+					var green = new Image();
+					green.src = "media/greenGem.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
+					ctx.drawImage(green, 0, 0, 30, 30, 320, 360, 30, 30);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("100 pts", 370, 380 );
+
+					// draw the pink gem
+					var pink = new Image();
+					pink.src = "media/pinkGemFlip.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
+					ctx.drawImage(pink, 480, 360);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("Invincibility", 510, 380 );
+
+					// draw the ship
+					var shipImg = new Image();
+					shipImg.src = "media/ship.png";
+					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
+					ctx.drawImage(shipImg, 100, 0, 50, 40, 80, 335, 50, 40);
+
+					
+
+					// Set the font
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2);
+
+					ctx.font = "15px TEXWORK";
+					ctx.fillText("Up or W speed up, Down/S slow down", 50, CANVAS_HEIGHT/2 + 15);
+					ctx.fillText("Left of A, Right or D turn left and right", 50, CANVAS_HEIGHT/2 + 30);
+					
+
+					ctx.font = "20px TEXWORK"
+					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 40);
 
 					//restore the draw settings
 					ctx.restore();
@@ -279,12 +327,12 @@
 					// save current draw settings
 					ctx.save();
 					// set the font
-					ctx.font = "20px Arial";
+					ctx.font = "20px TEXWORK";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText("Score: " + score, 10, 30);
-					ctx.fillText("Time: " + timer.toFixed(2), 150, 30);
+					ctx.fillText("Score: " + score, 170, 30);
+					ctx.fillText("Time: " + timer.toFixed(2), 30, 30);
 					//ctx.fillText("Elapsed Time: " + Math.ceil(elapsed_time), 300, 30);
 
 
@@ -297,15 +345,15 @@
 					// save current draw settings
 					ctx.save();
 					// set the font
-					ctx.font = "50px Arial";
+					ctx.font = "50px TEXWORK";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText("Time is Up!", CANVAS_WIDTH/2 - 100, 200);
-					ctx.fillText("Score:" + score, CANVAS_WIDTH/2 - 100, 250);
+					ctx.fillText("Time is Up!", (CANVAS_WIDTH/2 - 150), 200);
+					ctx.fillText("Score:" + score, (CANVAS_WIDTH/2 - 120), 250);
 
-					ctx.font = "20px Arial"
-					ctx.fillText("Press SPACE to return to menu", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
+					ctx.font = "20px TEXWORK";
+					ctx.fillText("Press SPACE to return to menu", (CANVAS_WIDTH/2 - 150), CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
@@ -318,12 +366,12 @@
 					ctx.save();
 
 					// set the font
-					ctx.font = "20px Arial";
+					ctx.font = "20px TEXWORK";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText("Score: " + score, 10, 30);
-					ctx.fillText("Time: " + Math.ceil(timer), 150, 30);
+					ctx.fillText("Score: " + score, 170, 30);
+					ctx.fillText("Time: " + Math.ceil(timer), 30, 30);
 
 					ctx.save();
 					ctx.globalAlpha = 0.2;
@@ -331,14 +379,14 @@
 					ctx.restore();
 
 					// set the font
-					ctx.font = "50px Arial";
+					ctx.font = "50px TEXWORK";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText(">> PAUSE <<", 80, CANVAS_HEIGHT/2);
+					ctx.fillText(">> PAUSE <<", 100, CANVAS_HEIGHT/2);
 
-					ctx.font = "20px Arial"
-					ctx.fillText("Press P to resume", CANVAS_WIDTH/2 - 50, CANVAS_HEIGHT - 100);
+					ctx.font = "20px TEXWORK"
+					ctx.fillText("Press P to resume", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
