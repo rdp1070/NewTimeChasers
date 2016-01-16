@@ -123,6 +123,7 @@
 				if (e.which == '83'){ pressDown = true};
 
 				// this is for the space bar
+				// I use it as a cheat button 
 				if (e.which == '32'){
 					if (gameState == "title" ){
 						gameState = "play";
@@ -133,6 +134,8 @@
 						// a cheat to add time for now
 						//score+= 100;
 						//timer++;
+						//ship.invincible = true;
+						//ship.invincibility_timer = 5;
 					}
 				}//  end SPACE if statement
 

@@ -177,9 +177,11 @@ function makeShip(){
 				//blah
 			}
 			if (this.invincible == true ){
-				this.img.src = "media/pinkship.png";
-			} else if(this.invincibility_timer < 1 && this.invincibility_timer > 0) {
-				this.img.src = "media/shipFlash.png";
+				if(this.invincibility_timer < 2 && this.invincibility_timer > 0) {
+					this.img.src = "media/shipFlash.png";
+				} else {
+					this.img.src = "media/pinkship.png";
+				}
 			} else {
 				this.img.src = "media/ship.png";
 			}
