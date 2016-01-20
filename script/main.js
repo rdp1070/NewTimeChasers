@@ -12,6 +12,7 @@
 			var num_collectibles = 5;
 			var backgroundImage = 0;
 			var background_frame = 0;
+			var backgroundMusic;
 
 			// Maximum number of collectible.
 			var max_gems = 0;
@@ -73,6 +74,16 @@
 				ctx.msImageSmoothingEnabled = true;
 				ctx.imageSmoothingEnabled = true;
 
+				backgroundMusic = document.createElement("AUDIO");
+				if (backgroundMusic.canPlayType("audio/mpeg")){
+					backgroundMusic.setAttribute("src", "media/timeChasers.mp3");
+				} else {
+					backgroundMusic.setAttribute("src", "media/timeChasers.ogg");
+				}
+    			document.body.appendChild(backgroundMusic);
+    			backgroundMusic.autoplay = true;
+    			backgroundMusic.loop = true;
+    			backgroundMusic.volume = .5;
 
 				// use event listeners attached to the window to call the 
 				// onkeydown function
@@ -98,6 +109,7 @@
 				timer = START_TIME;
 				elapsed_time = 0;
 				score = START_SCORE;
+
 
 				// star the update loop
 				update();
@@ -149,6 +161,16 @@
 					}
 					
 				} // end P if statement
+
+				// only mute the music if it is playing!
+				// this is for M
+				if(e.which == '77'){
+					if (backgroundMusic.volume != 0){
+						backgroundMusic.volume = 0;
+					} else {
+						backgroundMusic.volume = .5;
+					}
+				} // end M if statement
 			}
 
 
