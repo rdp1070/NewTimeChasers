@@ -80,7 +80,7 @@ function makeGem(){
 				//blah
 			}
 
-			this.img.src = "media/GreenGem.png";
+			this.img.src = "media/greenGem.png";
 		},
 
 
