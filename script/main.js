@@ -291,15 +291,15 @@
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
 					ctx.drawImage(green, 0, 0, 30, 30, 320, 360, 30, 30);
 					ctx.font = "20px TEXWORK";
-					ctx.fillText("100 pts", 370, 380 );
+					ctx.fillText("100 pts", 365, 380 );
 
 					// draw the pink gem
 					var pink = new Image();
 					pink.src = "media/pinkGemFlip.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(pink, 480, 360);
+					ctx.drawImage(pink, 470, 360);
 					ctx.font = "20px TEXWORK";
-					ctx.fillText("Invincibility", 510, 380 );
+					ctx.fillText("Invincibility", 500, 380 );
 
 					// draw the ship
 					var shipImg = new Image();
@@ -314,12 +314,13 @@
 					ctx.fillText("Instructions:", 50, CANVAS_HEIGHT/2);
 
 					ctx.font = "15px TEXWORK";
-					ctx.fillText("Up or W speed up, Down/S slow down", 50, CANVAS_HEIGHT/2 + 15);
-					ctx.fillText("Left of A, Right or D turn left and right", 50, CANVAS_HEIGHT/2 + 30);
+					ctx.fillText("Up or W speed up, Down or S slow down", 50, CANVAS_HEIGHT/2 + 15);
+					ctx.fillText("Left or A turns left, Right or D turns right", 50, CANVAS_HEIGHT/2 + 30);
+					ctx.fillText("M to Mute, P to Pause", 50, CANVAS_HEIGHT/2 + 45);
 					
 
 					ctx.font = "20px TEXWORK"
-					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 40);
+					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 70);
 
 					//restore the draw settings
 					ctx.restore();

@@ -131,7 +131,7 @@ function makeTear(){
 				//blah
 			}
 
-			this.img.src = "media/RedOrb.png";
+			this.img.src = "media/redOrb.png";
 		},
 
 		calcVelocity: function(shipX, shipY){
