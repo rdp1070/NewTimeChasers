@@ -13,11 +13,11 @@ function makeTear(){
 			y: 0,
 		},
 		rotation: 0,
-		speed : Math.random() *(5) - 3,
+		speed : Math.random() *(3) - 3,
 
 		// Static Variables
 		MAX_SPEED : 3,
-		MIN_SPEED : 0,
+		MIN_SPEED : -3,
 		DEFAULTX : canvas.width/2,
 		DEFAULTY : canvas.height/2,
 		TYPE : "tear",
@@ -25,9 +25,6 @@ function makeTear(){
 		// drawShip
 		// * for now just draw a tiny red circle that will
 		// * be a place holder for the tear
-		// * PLANNED
-		// * import graphics for the tear and place it 
-		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
 			this.setImage();
@@ -79,7 +76,6 @@ function makeTear(){
 		// * randomize the location of collected thing
 		// * return the score and time changes 
 		collected: function(){
-
 			this.randomize();
 			return { score: 0, timer: -3};
 		},
@@ -89,6 +85,7 @@ function makeTear(){
 		randomize: function(){
 			this.posX = Math.floor(Math.random() *(canvas.width - 100) + 100);
 			this.posY = Math.floor(Math.random() *(canvas.height - 100) + 100);
+			this.speed = Math.random() *(3) - 3;
 		},
 
 		// move

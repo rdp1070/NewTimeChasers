@@ -25,7 +25,7 @@
 			// title: for the title screen
 			// play: for the main game
 			// pause: for paused game
-			// highscore: for the highscore screen
+			// endScreen: for the endScreen screen
 			var gameState;
 
 			// Moving variables
@@ -59,10 +59,37 @@
 				four : 180
 			}
 
+			var images = ["title", "orb", "redOrb", "blueGem", "green", "pin k", "ship"];
+
+			window.onload = function preload(){
+				images["title"] = new Image();
+				images["title"].src = "media/title.png";
+
+				images["orb"] = new Image();
+				images["orb"].src = "media/orb.png";
+
+				// draw the red orb
+				images["redOrb"] = new Image();
+				images["redOrb"].src = "media/redOrb.png";
+
+				images["blue"] = new Image();
+				images["blue"].src = "media/blueGem.png";
+
+				images["green"] = new Image();
+				images["green"].src = "media/greenGem.png";
+
+				images["pink"] = new Image();
+				images["pink"].src = "media/pinkGemFlip.png";	
+
+				images["ship"] = new Image();
+				images["ship"].src = "media/ship.png";			
+
+				init();
+			}
 
 			// init
 			// * called when the page loads to set up stuff
-			window.onload = function init(){
+			function init(){
 				// get the canvas from the document
 				// get the context for the canvas
 				canvas = document.querySelector("#canvas");
@@ -93,6 +120,7 @@
 				// create the stuff needed for the game
 				// ship, collectibles
 				ship = makeShip();
+				ship.preload();
 
 				// set gameState
 				gameState = "title";
@@ -140,16 +168,32 @@
 					if (gameState == "title" ){
 						gameState = "play";
 						score = START_SCORE;
-					} else if (gameState == "highscore"){
+					} else if (gameState == "endScreen"){
 						gameState = "title";
 					} else {
-						// a cheat to add time for now
-						//score+= 100;
-						//timer++;
 						//ship.invincible = true;
 						//ship.invincibility_timer = 5;
 					}
 				}//  end SPACE if statement
+			}
+
+
+			// onkeyup
+			// parameters: e
+			// * activates when a key is released.
+			function onkeyup(e){
+				//console.log("key up");
+				// this is the events for the arrows
+				if (e.which == '37'){pressLeft = false;}
+				if (e.which == '39'){pressRight = false;}
+				if (e.which == '38'){pressUp = false;}
+				if (e.which == '40'){pressDown = false;}
+				
+				// this is for "wasd"
+				if (e.which == '65'){ pressLeft = false}
+				if (e.which == '68'){ pressRight = false}
+				if (e.which == '87'){ pressUp = false}
+				if (e.which == '83'){ pressDown = false}
 
 				// only pause the game if it is playing!
 				// this is for P
@@ -171,25 +215,6 @@
 						backgroundMusic.volume = .5;
 					}
 				} // end M if statement
-			}
-
-
-			// onkeyup
-			// parameters: e
-			// * activates when a key is released.
-			function onkeyup(e){
-				//console.log("key up");
-				// this is the events for the arrows
-				if (e.which == '37'){pressLeft = false;}
-				if (e.which == '39'){pressRight = false;}
-				if (e.which == '38'){pressUp = false;}
-				if (e.which == '40'){pressDown = false;}
-				
-				// this is for "wasd"
-				if (e.which == '65'){ pressLeft = false}
-				if (e.which == '68'){ pressRight = false}
-				if (e.which == '87'){ pressUp = false}
-				if (e.which == '83'){ pressDown = false}
 			}
 
 			function checkCollision(){
@@ -238,26 +263,12 @@
 			// gameEnd
 			// * do all the things for when the game is over
 			function gameEnd(){
-				
-				/* //Check to see if there is local storage for this browser
-				if(typeof(Storage) !== "undefined") {
-				    for (var x = 0; x < localStorage.NTC_highscores.length; x++){
-				    	if (score > localStorage.NTC_highscores[x]){
-				    		// THIS BREAKS HERE, IT NEEDS TO BE A STRING
-				    		localStorage.NTC_highscores[x] = score;
-				    		debugger;
-				    		break;
-				    	}
-				    }
-				    
-				} else {
-				    // Sorry! No Web Storage support..
-				}*/
 
-				gameState = "highscore"
+				gameState = "endScreen"
 				timer = START_TIME;
 				elapsed_time = 0;
 				ship = makeShip();
+				ship.preload();
 				
 				for (var x= collectibles.length; x > 0; x--){
 					collectibles.pop();
@@ -269,7 +280,7 @@
 			// * draw the score and time remaining.
 			// * gets called every animation frame
 			function drawUI(){
-				
+
 				// if the game is on the title screen draw this
 				if (gameState == "title"){
 					// save current draw settings
@@ -277,59 +288,42 @@
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					var titleImg = new Image ();
-					titleImg.src = "media/Title.png";
-					ctx.drawImage(titleImg, 20, 0, 600, 300);
-
+					ctx.drawImage(images["title"], 20, 0, 600, 300);
 
 					// draw the blue orb
-					var orb = new Image();
-					orb.src = "media/orb.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dHeigh, dWidth
-					ctx.drawImage(orb, 0, 0, 30, 30, 220, 320, 30, 30);
+					ctx.drawImage(images["orb"], 0, 0, 30, 30, 220, 320, 30, 30);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("+5 sec", 260, 340);
 
-					// draw the red orb
-					var redOrb = new Image();
-					redOrb.src = "media/redOrb.png";
+					
 					// img, subx, suby, subWidth, subHeight, dx, dy, dHeigh, dWidth
-					ctx.drawImage(redOrb, 0, 0, 30, 30, 370, 320, 30, 30);
+					ctx.drawImage(images["redOrb"], 0, 0, 30, 30, 370, 320, 30, 30);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("-3 sec", 410, 340 );
 
 					// draw the blue gem
-					var blueGem = new Image();
-					blueGem.src = "media/blueGem.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(blueGem, 0, 0, 30, 30, 170, 360, 30, 30);
+					ctx.drawImage(images["blue"], 0, 0, 30, 30, 170, 360, 30, 30);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("+2 sec", 220, 380);
 					ctx.fillText("50 pts", 220, 400);
 
 					// draw the green gem
-					var green = new Image();
-					green.src = "media/greenGem.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(green, 0, 0, 30, 30, 320, 360, 30, 30);
+					ctx.drawImage(images["green"], 0, 0, 30, 30, 320, 360, 30, 30);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("100 pts", 365, 380 );
 
 					// draw the pink gem
-					var pink = new Image();
-					pink.src = "media/pinkGemFlip.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(pink, 470, 360);
+					ctx.drawImage(images["pink"], 470, 360);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("Invincibility", 500, 380 );
 
 					// draw the ship
-					var shipImg = new Image();
-					shipImg.src = "media/ship.png";
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(shipImg, 100, 0, 50, 40, 80, 335, 50, 40);
-
-					
+					ctx.drawImage(images["ship"], 100, 0, 50, 40, 80, 335, 50, 40);
 
 					// Set the font
 					ctx.font = "20px TEXWORK";
@@ -341,8 +335,14 @@
 					ctx.fillText("M to Mute, P to Pause", 50, CANVAS_HEIGHT/2 + 45);
 					
 
-					ctx.font = "20px TEXWORK"
+					ctx.font = "18px TEXWORK";
 					ctx.fillText("Press SPACE to start", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 70);
+
+					ctx.font = "14px TEXWORK";
+					ctx.fillText("Code by Bobby Pruden", 10, CANVAS_HEIGHT - 30);
+					ctx.fillText("Art by Tiffany McFarlane", 10, CANVAS_HEIGHT - 10);
+					ctx.font = "16px TEXWORK";
+					ctx.fillText("Music by Demigod q", CANVAS_WIDTH/2 + 110, CANVAS_HEIGHT - 10);
 
 					//restore the draw settings
 					ctx.restore();
@@ -366,20 +366,29 @@
 					ctx.restore();
 				} 
 
-				// if you are on the highscore screen draw this
-				else if (gameState == "highscore") {
+				// if you are on the endScreen screen draw this
+				else if (gameState == "endScreen") {
 					// save current draw settings
 					ctx.save();
 					// set the font
+					ctx.textAlign = "center";
 					ctx.font = "50px TEXWORK";
 					ctx.fillStyle = "white";
 
+					// ctx.save();
+					// ctx.strokeStyle = "white";
+					// ctx.beginPath();
+					// ctx.moveTo(CANVAS_WIDTH/2,0);
+					// ctx.lineTo(CANVAS_WIDTH/2, CANVAS_HEIGHT);
+					// ctx.stroke();
+					// ctx.restore();
+
 					// actually draw the text
-					ctx.fillText("Time is Up!", (CANVAS_WIDTH/2 - 150), 200);
-					ctx.fillText("Score:" + score, (CANVAS_WIDTH/2 - 120), 250);
+					ctx.fillText("Time is Up!", (CANVAS_WIDTH/2), 200);
+					ctx.fillText("Score:" + score, (CANVAS_WIDTH/2), 250);
 
 					ctx.font = "20px TEXWORK";
-					ctx.fillText("Press SPACE to return to menu", (CANVAS_WIDTH/2 - 150), CANVAS_HEIGHT - 100);
+					ctx.fillText("Press SPACE to return to menu", (CANVAS_WIDTH/2), CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
@@ -390,7 +399,7 @@
 
 					// save current draw settings
 					ctx.save();
-
+					
 					// set the font
 					ctx.font = "20px TEXWORK";
 					ctx.fillStyle = "white";
@@ -404,15 +413,16 @@
 					ctx.fillRect(0,0,CANVAS_WIDTH, CANVAS_HEIGHT,1);
 					ctx.restore();
 
+					ctx.textAlign = "center";
 					// set the font
 					ctx.font = "50px TEXWORK";
 					ctx.fillStyle = "white";
 
 					// actually draw the text
-					ctx.fillText(">> PAUSE <<", 100, CANVAS_HEIGHT/2);
+					ctx.fillText(">> PAUSE <<", CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
 
 					ctx.font = "20px TEXWORK"
-					ctx.fillText("Press P to resume", CANVAS_WIDTH/2 - 100, CANVAS_HEIGHT - 100);
+					ctx.fillText("Press P to resume", CANVAS_WIDTH/2, CANVAS_HEIGHT - 100);
 
 					//restore the draw settings
 					ctx.restore();
@@ -433,7 +443,7 @@
 				ctx.drawImage(backgroundImage, 640 * Math.floor(background_frame) , 0, 640, 520, 0, 0,  640, 520);
 
 
-				// if the timer runs out, go to the highscore screen
+				// if the timer runs out, go to the endScreen screen
 				if (timer <= 0) {
 					gameEnd();
 				};
@@ -479,7 +489,6 @@
 					max_pink_gems = Math.min((Math.floor(score/500)) , 1);
 
 					// check if the array of collectibles has the correct amount of collectibles in it.
-					//console.log("num_collectibles: " + num_collectibles );
 					if (collectibles.length < Math.floor(num_collectibles)){
 						
 						// create the counting variables
@@ -593,11 +602,10 @@
 					// draw the title UI
 					drawUI();
 
-				} else if (gameState == "highscore"){
+				} else if (gameState == "endScreen"){
 					
-					// ADD CODE TO SAVE THE HIGHSCORE HERE
-
 					ship = makeShip();
+					ship.preload();
 					drawUI();
 
 				} else if (gameState == "pause"){

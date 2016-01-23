@@ -17,6 +17,10 @@ function makeShip(){
 		friction : .97,
 		invincible : false,
 		invincibility_timer: 0,
+		// so you can preload the images
+		normShip : new Image,
+		pinkShip: new Image,
+		flashShip: new Image,
 
 		// Static Variables
 		MAX_SPEED : 6,
@@ -178,13 +182,21 @@ function makeShip(){
 			}
 			if (this.invincible == true ){
 				if(this.invincibility_timer < 2 && this.invincibility_timer > 0) {
-					this.img.src = "media/shipFlash.png";
+					this.img = this.flashShip;
 				} else {
-					this.img.src = "media/pinkship.png";
+					this.img = this.pinkShip;
 				}
 			} else {
-				this.img.src = "media/ship.png";
+				this.img = this.normShip;
 			}
+		},
+
+		// preload 
+		// * preload all of the images so you don't have to load them later. 
+		preload: function(){
+			this.normShip.src = "media/ship.png";
+			this.flashShip.src = "media/shipFlash.png";
+			this.pinkShip.src = "media/pinkship.png";
 		},
 
 		// calcVelocity 
