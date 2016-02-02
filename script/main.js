@@ -115,11 +115,11 @@
     			document.body.appendChild(backgroundMusic);
     			backgroundMusic.autoplay = true;
     			backgroundMusic.loop = true;
-    			backgroundMusic.volume = 0.5;
+    			backgroundMusic.volume = 0.2;
     			sounds["gem"].volume = 0.5;
-				sounds["tear"].volume = 0.5;
+				sounds["tear"].volume = 0.9;
 				sounds["seal"].volume = 0.5;
-				sounds["invincible"].volume = 0.5;
+				sounds["invincible"].volume = 1;
 
     			loading = false;
 				init();
@@ -255,6 +255,7 @@
 						if (c < radii){
 							// get collected nerd!
 							var newValues = collectibles[i].collected();
+							playSound(collectibles[i].TYPE);
 							// the new values are returned by the collected function
 							score += newValues.score;
 							timer += newValues.timer;
@@ -409,7 +410,7 @@
 
 					// actually draw the text
 					ctx.fillText("Time is Up!", (CANVAS_WIDTH/2), 200);
-					ctx.fillText("Score:" + score, (CANVAS_WIDTH/2), 250);
+					ctx.fillText("Score: " + score, (CANVAS_WIDTH/2), 250);
 
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("Press SPACE to return to menu", (CANVAS_WIDTH/2), CANVAS_HEIGHT - 100);
@@ -471,6 +472,11 @@
 				if (timer <= 0) {
 					gameEnd();
 				};
+
+				if ( ship.invincible == false ){
+					sounds["invincible"].pause();
+					sounds["invincible"].loop = false;
+				}
 
 
 				// if the end of the song 
@@ -656,6 +662,18 @@
 
 			}
 
+			// PlaySound
+			// * play sound effect for appropriate item 
+			function playSound(tag){
+				if (tag == "blueGem"){
+					sounds["gem"].play();
+				} else if(tag == "pinkGem"){
+					sounds["invincible"].play();
+					sounds["invincible"].loop = true;
+				} else {
+					sounds[tag].play();
+				}
+			}
 
 			// Mute
 			// * mute all the things
@@ -668,11 +686,11 @@
 					sounds["invincible"].volume = 0;
 					muted = !muted;
 				} else {
-					backgroundMusic.volume = 0.5;
+					backgroundMusic.volume = 0.2;
 					sounds["gem"].volume = 0.5;
-					sounds["tear"].volume = 0.5;
+					sounds["tear"].volume = 0.9;
 					sounds["seal"].volume = 0.5;
-					sounds["invincible"].volume = 0.5;
+					sounds["invincible"].volume = 1;
 					muted = !muted;
 				}
 			}
