@@ -10,9 +10,9 @@
 			var elapsed_time;
 			var score;
 			var num_collectibles = 5;
-			var backgroundImage = 0;
 			var background_frame = 0;
-			var backgroundMusic;
+			var backgroundMusic = 0;
+			var sounds = ["invincible","gem","tear","seal"];
 
 			// Maximum number of collectible.
 			var max_gems = 0;
@@ -27,6 +27,8 @@
 			// pause: for paused game
 			// endScreen: for the endScreen screen
 			var gameState;
+			var loading = true;
+			var muted = false;
 
 			// Moving variables
 			var pressLeft = false;
@@ -59,8 +61,11 @@
 				four : 180
 			}
 
-			var images = ["title", "orb", "redOrb", "blueGem", "green", "pin k", "ship"];
+			var images = ["title", "orb", "redOrb", "blueGem", "green", "pin k", "ship", "backgroundImage"];
 
+			// preload
+			// * load all of the images and the sound ahead of time
+			// * this prevent ugly popping when going back to the main screen.
 			window.onload = function preload(){
 				images["title"] = new Image();
 				images["title"].src = "media/title.png";
@@ -84,6 +89,39 @@
 				images["ship"] = new Image();
 				images["ship"].src = "media/ship.png";			
 
+				images["backgroundImage"] = new Image();
+				images["backgroundImage"].src = "media/space.png";
+
+				backgroundMusic = document.createElement("audio");
+				//var sounds = ["invincible","gem","tear","seal"];
+				sounds["gem"] = document.createElement("audio");
+				sounds["tear"] = document.createElement("audio");
+				sounds["seal"] = document.createElement("audio");
+				sounds["invincible"] = document.createElement("audio");
+
+				if (backgroundMusic.canPlayType("audio/mpeg")){
+					backgroundMusic.setAttribute("src", "media/timeChasers.mp3");
+					sounds["gem"].setAttribute("src", "media/gemSound.ogg");
+					sounds["tear"].setAttribute("src", "media/tearSound.ogg");
+					sounds["seal"].setAttribute("src", "media/sealSound.ogg");
+					sounds["invincible"].setAttribute("src", "media/invincibleSound.ogg");
+				} else {
+					backgroundMusic.setAttribute("src", "media/timeChasers.ogg");
+					sounds["gem"].setAttribute("src", "media/gemSound.ogg");
+					sounds["tear"].setAttribute("src", "media/tearSound.ogg");
+					sounds["seal"].setAttribute("src", "media/sealSound.ogg");
+					sounds["invincible"].setAttribute("src", "media/invincibleSound.ogg");
+				}
+    			document.body.appendChild(backgroundMusic);
+    			backgroundMusic.autoplay = true;
+    			backgroundMusic.loop = true;
+    			backgroundMusic.volume = 0.5;
+    			sounds["gem"].volume = 0.5;
+				sounds["tear"].volume = 0.5;
+				sounds["seal"].volume = 0.5;
+				sounds["invincible"].volume = 0.5;
+
+    			loading = false;
 				init();
 			}
 
@@ -97,20 +135,8 @@
 
 				//image smoothing
 				ctx.mozImageSmoothingEnabled = true;
-				ctx.webkitImageSmoothingEnabled = true;
 				ctx.msImageSmoothingEnabled = true;
 				ctx.imageSmoothingEnabled = true;
-
-				backgroundMusic = document.createElement("AUDIO");
-				if (backgroundMusic.canPlayType("audio/mpeg")){
-					backgroundMusic.setAttribute("src", "media/timeChasers.mp3");
-				} else {
-					backgroundMusic.setAttribute("src", "media/timeChasers.ogg");
-				}
-    			document.body.appendChild(backgroundMusic);
-    			backgroundMusic.autoplay = true;
-    			backgroundMusic.loop = true;
-    			backgroundMusic.volume = .5;
 
 				// use event listeners attached to the window to call the 
 				// onkeydown function
@@ -124,10 +150,6 @@
 
 				// set gameState
 				gameState = "title";
-
-				// get the background image
-				backgroundImage = new Image();
-				backgroundImage.src = "media/space.png";
 
 				// set the canvas height and width
 				canvas.height = CANVAS_HEIGHT;
@@ -209,11 +231,7 @@
 				// only mute the music if it is playing!
 				// this is for M
 				if(e.which == '77'){
-					if (backgroundMusic.volume != 0){
-						backgroundMusic.volume = 0;
-					} else {
-						backgroundMusic.volume = .5;
-					}
+					mute();
 				} // end M if statement
 			}
 
@@ -280,9 +298,15 @@
 			// * draw the score and time remaining.
 			// * gets called every animation frame
 			function drawUI(){
-
+				if (loading == true){
+					ctx.save();
+					ctx.fontStyle = "black";
+					ctx.textAlign = "center";
+					ctx.font = "50px TEXWORK";
+					ctx.fillText("LOADING...", CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
+				}
 				// if the game is on the title screen draw this
-				if (gameState == "title"){
+				else if (gameState == "title"){
 					// save current draw settings
 					ctx.save();
 					ctx.fillStyle = "white";
@@ -440,13 +464,19 @@
 
 				// draw the image, subtracting the size of the image
 				// using the background_frames here I am able to animate the sprite. 
-				ctx.drawImage(backgroundImage, 640 * Math.floor(background_frame) , 0, 640, 520, 0, 0,  640, 520);
+				ctx.drawImage(images["backgroundImage"], 640 * Math.floor(background_frame) , 0, 640, 520, 0, 0,  640, 520);
 
 
 				// if the timer runs out, go to the endScreen screen
 				if (timer <= 0) {
 					gameEnd();
 				};
+
+
+				// if the end of the song 
+				if (backgroundMusic.currentTime >= 61){
+					backgroundMusic.currentTime = 0;
+				}
 
 
 				// if the gamestate is the title screen
@@ -535,6 +565,7 @@
 						// make the tears
 						if (num_tears < max_tears){
 							var newTear = makeTear();
+							newTear.img = images["redOrb"];
 							collectibles.push(newTear);
 						} 
 						// make the seals
@@ -542,8 +573,6 @@
 							var newSeal = makeSeal();
 							collectibles.push(newSeal);
 						}
-
-
 					}
 					
 
@@ -569,6 +598,7 @@
 							if (collectibles[i].TYPE == "tear"){
 								collectibles[i].move(ship.posX, ship.posY);
 							}
+
 						}
 						else if ( score >= SCORE_THRESHOLDS.two || timer > 80 || elapsed_time > TIME_THRESHOLDS.two){
 							if (collectibles[i].TYPE == "seal" || collectibles[i].TYPE == "tear" || collectibles[i].TYPE == "pinkGem"){
@@ -622,9 +652,30 @@
 				}
 				else{
 					background_frame = 0;
-				}
-					
+				}	
 
 			}
+
+
+			// Mute
+			// * mute all the things
+			function mute(){
+				if (muted){
+					backgroundMusic.volume = 0;
+					sounds["gem"].volume = 0;
+					sounds["tear"].volume = 0;
+					sounds["seal"].volume = 0;
+					sounds["invincible"].volume = 0;
+					muted = !muted;
+				} else {
+					backgroundMusic.volume = 0.5;
+					sounds["gem"].volume = 0.5;
+					sounds["tear"].volume = 0.5;
+					sounds["seal"].volume = 0.5;
+					sounds["invincible"].volume = 0.5;
+					muted = !muted;
+				}
+			}
+
 
 		}());

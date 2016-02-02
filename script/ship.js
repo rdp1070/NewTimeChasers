@@ -22,6 +22,7 @@ function makeShip(){
 		pinkShip: new Image,
 		flashShip: new Image,
 
+
 		// Static Variables
 		MAX_SPEED : 6,
 		MIN_SPEED : 1,

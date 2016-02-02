@@ -14,6 +14,7 @@ function makeTear(){
 		},
 		rotation: 0,
 		speed : Math.random() *(3) - 3,
+		img: 0,
 
 		// Static Variables
 		MAX_SPEED : 3,
@@ -27,7 +28,7 @@ function makeTear(){
 		// * be a place holder for the tear
 		draw: function(_ctx){
 			var ctx = _ctx;
-			this.setImage();
+			//this.setImage();
 
 			if (!this.img){
 				ctx.save();
@@ -123,21 +124,15 @@ function makeTear(){
 		// * so when you draw it in the draw function 
 		// * it's the right one
 		setImage: function(){
-			this.img = new Image();
-			this.img.onload = function(){
-				//blah
-			}
-
 			this.img.src = "media/redOrb.png";
+			
 		},
 
 		calcVelocity: function(shipX, shipY){
 
 			// Go in a straight line left or right 
 
-			this.velocity.x = this.speed;
-
-			
+			this.velocity.x = this.speed;			
 		}
 
 	}
