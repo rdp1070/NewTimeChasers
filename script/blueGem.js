@@ -33,7 +33,6 @@ function makeBlueGem(){
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
-			this.setImage();
 			
 			if (!this.img){
 				ctx.save();
@@ -74,13 +73,8 @@ function makeBlueGem(){
 		// * set the image of the gem to the appropriate img
 		// * so when you draw it in the draw function 
 		// * it's the right one
-		setImage: function(){
-			this.img = new Image();
-			this.img.onload = function(){
-				//blah
-			}
-
-			this.img.src = "media/blueGem.png";
+		setImage: function(newImage){
+			this.img = newImage;
 		},
 
 

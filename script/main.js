@@ -61,7 +61,7 @@
 				four : 180
 			}
 
-			var images = ["title", "orb", "redOrb", "blueGem", "green", "pin k", "ship", "backgroundImage"];
+			var images = ["title", "orb", "redOrb", "blue", "green", "pink", "ship", "backgroundImage"];
 
 			// preload
 			// * load all of the images and the sound ahead of time
@@ -84,7 +84,7 @@
 				images["green"].src = "media/greenGem.png";
 
 				images["pink"] = new Image();
-				images["pink"].src = "media/pinkGemFlip.png";	
+				images["pink"].src = "media/pinkGem.png";	
 
 				images["ship"] = new Image();
 				images["ship"].src = "media/ship.png";			
@@ -195,6 +195,10 @@
 					} else {
 						//ship.invincible = true;
 						//ship.invincibility_timer = 5;
+						var newGem = makePinkGem();
+						newGem.setImage(images["pink"]);
+						collectibles.push(newGem);
+
 					}
 				}//  end SPACE if statement
 			}
@@ -342,7 +346,7 @@
 
 					// draw the pink gem
 					// img, subx, suby, subWidth, subHeight, dx, dy, dWidth, dHeight
-					ctx.drawImage(images["pink"], 470, 360);
+					ctx.drawImage(images["pink"], 0, 0, 21, 29, 470, 360,  21, 29);
 					ctx.font = "20px TEXWORK";
 					ctx.fillText("Invincibility", 500, 380 );
 
@@ -560,10 +564,13 @@
 							var newGem;
 							if (randNum == 4 && num_blue_gems < max_blue_gems){
 								newGem = makeBlueGem();
+								newGem.setImage(images["blue"]);
 							} else if ( randNum * 2 == 8 && num_pink_gems < max_pink_gems && score > SCORE_THRESHOLDS.two) {
 								newGem = makePinkGem();
+								newGem.setImage(images["pink"]);
 							} else {
 								newGem = makeGem();
+								newGem.setImage(images["green"]);
 							}
 							
 							collectibles.push(newGem);
@@ -571,12 +578,13 @@
 						// make the tears
 						if (num_tears < max_tears){
 							var newTear = makeTear();
-							newTear.img = images["redOrb"];
+							newTear.setImage(images["redOrb"]);
 							collectibles.push(newTear);
 						} 
 						// make the seals
 						if (num_seals < max_seals){
 							var newSeal = makeSeal();
+							newSeal.setImage(images["orb"]);
 							collectibles.push(newSeal);
 						}
 					}

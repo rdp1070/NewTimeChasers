@@ -33,7 +33,6 @@ function makePinkGem(){
 		// * in the appropriate position
 		draw: function(_ctx){
 			var ctx = _ctx;
-			this.setImage();
 			
 			if (!this.img){
 				ctx.save();
@@ -82,15 +81,9 @@ function makePinkGem(){
 		// * set the image of the gem to the appropriate img
 		// * so when you draw it in the draw function 
 		// * it's the right one
-		setImage: function(){
-			this.img = new Image();
-			this.img.onload = function(){
-				//blah
-			}
-
-			this.img.src = "media/pinkGem.png";
+		setImage: function(newImage){
+			this.img = newImage;
 		},
-
 
 		// collected
 		// * randomize the location of collected thing

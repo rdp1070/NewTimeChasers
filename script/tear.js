@@ -28,7 +28,6 @@ function makeTear(){
 		// * be a place holder for the tear
 		draw: function(_ctx){
 			var ctx = _ctx;
-			//this.setImage();
 
 			if (!this.img){
 				ctx.save();
@@ -123,9 +122,8 @@ function makeTear(){
 		// * set the image of the gem to the appropriate img
 		// * so when you draw it in the draw function 
 		// * it's the right one
-		setImage: function(){
-			this.img.src = "media/redOrb.png";
-			
+		setImage: function(newImage){
+			this.img = newImage;
 		},
 
 		calcVelocity: function(shipX, shipY){
