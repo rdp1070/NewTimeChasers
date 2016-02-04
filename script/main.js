@@ -173,10 +173,10 @@
 				// use keycodes from the events to 
 				
 				// this is the events for the arrows
-				if (e.which == '37'){pressLeft = true;}
-				if (e.which == '39'){pressRight = true;}
-				if (e.which == '38'){pressUp = true;}
-				if (e.which == '40'){pressDown = true;};
+				if (e.which == '37'){pressLeft = true; e.preventDefault();}
+				if (e.which == '39'){pressRight = true; e.preventDefault();}
+				if (e.which == '38'){pressUp = true; e.preventDefault();}
+				if (e.which == '40'){pressDown = true; e.preventDefault();};
 				
 				// this is for "wasd"
 				if (e.which == '65'){ pressLeft = true}
@@ -190,15 +190,12 @@
 					if (gameState == "title" ){
 						gameState = "play";
 						score = START_SCORE;
+						e.preventDefault();
 					} else if (gameState == "endScreen"){
 						gameState = "title";
+						e.preventDefault();
 					} else {
-						//ship.invincible = true;
-						//ship.invincibility_timer = 5;
-						var newGem = makePinkGem();
-						newGem.setImage(images["pink"]);
-						collectibles.push(newGem);
-
+						e.preventDefault();
 					}
 				}//  end SPACE if statement
 			}
